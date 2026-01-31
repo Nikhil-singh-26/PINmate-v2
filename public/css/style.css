@@ -78,6 +78,27 @@
     flex-direction: column;
     align-items: flex-start;
     min-width: 200px;
+    position: relative;
+}
+
+.hamburger-btn {
+    display: none;
+    background: none;
+    border: none;
+    font-size: 24px;
+    color: var(--primary-indigo);
+    cursor: pointer;
+    padding: 5px;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+    position: absolute;
+    left: -40px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.hamburger-btn:hover {
+    background: rgba(99, 102, 241, 0.1);
 }
 
 .nav-header h2 {
@@ -141,6 +162,10 @@
     padding: 8px 16px;
     font-size: 12px;
     white-space: nowrap;
+}
+
+.nav-actions-mobile {
+    display: none;
 }
 
 .admin-main {
@@ -448,74 +473,199 @@ tr:hover {
 
 /* Responsive Design for Admin Navigation */
 @media (max-width: 768px) {
-    .admin-topnav {
-        height: auto;
-        padding: 15px;
-        flex-direction: column;
-        gap: 15px;
+    .hamburger-btn {
+        display: block;
+        left: 0;
     }
     
     .nav-header {
-        width: 100%;
+        min-width: auto;
+        padding-left: 40px;
         align-items: center;
         text-align: center;
-        min-width: auto;
+    }
+    
+    .nav-header h2 {
+        font-size: 16px;
+    }
+    
+    .nav-header p {
+        font-size: 11px;
     }
     
     .nav-menu {
-        width: 100%;
-        justify-content: center;
-        gap: 5px;
+        position: fixed;
+        top: 80px;
+        left: -100%;
+        width: 280px;
+        height: calc(100vh - 80px);
+        background: var(--card-bg);
+        border-right: 2px solid var(--border-color);
+        flex-direction: column;
+        align-items: stretch;
+        justify-content: flex-start;
+        padding: 20px 0;
+        gap: 0;
+        transition: left 0.3s ease;
+        z-index: 999;
+        box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+        overflow-y: auto;
+    }
+    
+    .nav-menu.active {
+        left: 0;
     }
     
     .nav-menu .menu-link {
-        padding: 8px 12px;
-        font-size: 12px;
+        width: 100%;
+        padding: 15px 20px;
+        border-bottom: 1px solid rgba(99, 102, 241, 0.1);
+        border-radius: 0;
+        text-align: left;
+        font-size: 14px;
+    }
+    
+    .nav-menu .menu-link:hover {
+        transform: none;
+        background: rgba(99, 102, 241, 0.15);
     }
     
     .nav-actions {
-        width: 100%;
-        justify-content: center;
-        min-width: auto;
+        display: none;
     }
     
-    .nav-actions .secondary-btn,
-    .nav-actions .logout-btn {
-        flex: 1;
-        max-width: 150px;
+    .nav-actions-mobile {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        padding: 20px;
+        border-top: 2px solid var(--border-color);
+        margin-top: auto;
+    }
+    
+    .nav-actions-mobile .secondary-btn,
+    .nav-actions-mobile .logout-btn {
+        width: 100%;
+        padding: 12px;
+        font-size: 13px;
     }
     
     .admin-main {
-        margin-top: 180px;
+        margin-top: 80px;
         padding: 20px;
+    }
+    
+    .admin-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+    
+    .admin-header h1 {
+        font-size: 24px;
+    }
+    
+    .stats-grid {
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 15px;
+    }
+    
+    .stat-card {
+        padding: 15px;
+    }
+    
+    .stat-card .number {
+        font-size: 28px;
+    }
+    
+    .section-title {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+    
+    .table-container {
+        overflow-x: auto;
+    }
+    
+    table {
+        min-width: 600px;
+    }
+    
+    th, td {
+        padding: 10px;
+        font-size: 12px;
+    }
+    
+    .modal-content {
+        width: 95%;
+        padding: 20px;
+        max-height: 80vh;
+        overflow-y: auto;
     }
 }
 
 @media (max-width: 480px) {
+    .admin-topnav {
+        padding: 0 15px;
+    }
+    
+    .nav-header h2 {
+        font-size: 14px;
+    }
+    
+    .nav-header p {
+        font-size: 10px;
+    }
+    
     .nav-menu {
-        flex-wrap: wrap;
-        gap: 3px;
-    }
-    
-    .nav-menu .menu-link {
-        padding: 6px 8px;
-        font-size: 11px;
-    }
-    
-    .nav-actions {
-        flex-direction: column;
-        gap: 8px;
-    }
-    
-    .nav-actions .secondary-btn,
-    .nav-actions .logout-btn {
         width: 100%;
-        max-width: none;
+        left: -100%;
     }
     
     .admin-main {
-        margin-top: 220px;
         padding: 15px;
+    }
+    
+    .admin-header h1 {
+        font-size: 20px;
+    }
+    
+    .stats-grid {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+    
+    .stat-card {
+        padding: 12px;
+    }
+    
+    .stat-card .number {
+        font-size: 24px;
+    }
+    
+    .btn-primary {
+        width: 100%;
+        padding: 12px;
+        font-size: 13px;
+    }
+    
+    .btn-success, .btn-danger, .btn-warning {
+        padding: 6px 12px;
+        font-size: 11px;
+        margin: 2px;
+    }
+    
+    .modal-content {
+        width: 98%;
+        padding: 15px;
+    }
+    
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+        padding: 8px;
+        font-size: 14px;
     }
 }
 

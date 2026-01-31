@@ -6,8 +6,7 @@
     <title>PINmate - Admin Dashboard</title>
     <link rel="stylesheet" href="css/style.css">
     <link rel="manifest" href="manifest.json">
-    <link rel="icon" href="assets/icons/icon-192.png" type="image/x-icon">
-    <link rel="icon" type="image/png" sizes="192x192" href="assets/icons/icon-192.png">
+    <link rel="icon" href="assets/icons/icon-192.png" sizes="192x192" type="image/png">
     <link rel="apple-touch-icon" href="assets/icons/icon-192.png">
     <meta name="theme-color" content="#6366f1">
 </head>
@@ -23,10 +22,11 @@
         <!-- Top Navigation Bar -->
         <nav class="admin-topnav">
             <div class="nav-header">
+                <button class="hamburger-btn" id="hamburgerBtn">☰</button>
                 <h2>🔐 PINmate Admin</h2>
                 <p id="adminEmail">admin@example.com</p>
             </div>
-            <div class="nav-menu">
+            <div class="nav-menu" id="navMenu">
                 <a class="menu-link active" data-section="dashboard">📊 Dashboard</a>
                 <a class="menu-link" data-section="colleges">🏫 Colleges</a>
                 <a class="menu-link" data-section="users">👥 Users</a>
@@ -34,6 +34,10 @@
                 <a class="menu-link" data-section="skills">🎯 Skills</a>
                 <a class="menu-link" data-section="domains">🌐 Domains</a>
                 <a class="menu-link" data-section="logs">📝 Activity Logs</a>
+                <div class="nav-actions-mobile">
+                    <button id="dashboardBtn" class="secondary-btn">Back to Dashboard</button>
+                    <button id="logoutBtn" class="logout-btn">Logout</button>
+                </div>
             </div>
             <div class="nav-actions">
                 <button id="dashboardBtn" class="secondary-btn">Back to Dashboard</button>
@@ -867,6 +871,33 @@
             document.getElementById(modalId).style.display = 'none';
         };
 
+        // ============================================
+        // MOBILE MENU FUNCTIONALITY
+        // ============================================
+        const hamburgerBtn = document.getElementById('hamburgerBtn');
+        const navMenu = document.getElementById('navMenu');
+        
+        hamburgerBtn.addEventListener('click', () => {
+            navMenu.classList.toggle('active');
+        });
+        
+        // Close menu when clicking outside
+        document.addEventListener('click', (e) => {
+            if (window.innerWidth <= 768 && 
+                !navMenu.contains(e.target) && 
+                !hamburgerBtn.contains(e.target) &&
+                navMenu.classList.contains('active')) {
+                navMenu.classList.remove('active');
+            }
+        });
+        
+        // Close menu when window resizes to desktop
+        window.addEventListener('resize', () => {
+            if (window.innerWidth > 768) {
+                navMenu.classList.remove('active');
+            }
+        });
+        
         // ============================================
         // EVENT HANDLERS
         // ============================================
