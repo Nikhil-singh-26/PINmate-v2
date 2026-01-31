@@ -6,10 +6,11 @@
     "users": {
       "$uid": {
         ".read": "auth != null && (auth.uid === $uid || auth.token.admin === true)",
-
-        ".write": "auth != null && auth.uid === $uid && newData.exists()",
-
+        ".write": "auth != null && auth.uid === $uid",
         "role": {
+          ".write": false
+        },
+        "disabled": {
           ".write": false
         }
       }
@@ -18,19 +19,68 @@
     "projects": {
       "$projectId": {
         ".read": "auth != null",
-
         ".write": "auth != null && (newData.child('owner').val() === auth.uid || auth.token.admin === true)",
-
-        "title": {
-          ".validate": "newData.isString() && newData.val().length > 0"
+        "status": {
+          ".validate": "newData.val() === 'pending' || newData.val() === 'approved' || newData.val() === 'rejected'"
         },
         "owner": {
           ".validate": "newData.val() === auth.uid"
         },
-      "members": {
-  ".validate": "newData.hasChildren() || !newData.exists()"
-}
+        "teamMembers": {
+          ".validate": "newData.hasChildren() || !newData.exists()"
+        }
+      }
+    },
 
+    "colleges": {
+      "$collegeId": {
+        ".read": "auth != null",
+        ".write": "auth != null && auth.token.admin === true",
+        "name": {
+          ".validate": "newData.isString() && newData.val().length > 0"
+        },
+        "city": {
+          ".validate": "newData.isString() && newData.val().length > 0"
+        },
+        "state": {
+          ".validate": "newData.isString() && newData.val().length > 0"
+        }
+      }
+    },
+
+    "skills": {
+      "$skillId": {
+        ".read": "auth != null",
+        ".write": "auth != null && auth.token.admin === true",
+        "name": {
+          ".validate": "newData.isString() && newData.val().length > 0"
+        }
+      }
+    },
+
+    "domains": {
+      "$domainId": {
+        ".read": "auth != null",
+        ".write": "auth != null && auth.token.admin === true",
+        "name": {
+          ".validate": "newData.isString() && newData.val().length > 0"
+        }
+      }
+    },
+
+    "adminLogs": {
+      "$logId": {
+        ".read": "auth != null && auth.token.admin === true",
+        ".write": "auth != null && auth.token.admin === true",
+        "action": {
+          ".validate": "newData.isString()"
+        },
+        "description": {
+          ".validate": "newData.isString()"
+        },
+        "timestamp": {
+          ".validate": "newData.isString()"
+        }
       }
     }
   }

@@ -41,6 +41,183 @@
   --shadow-glow: 0 0 30px rgba(0, 212, 255, 0.15);
 }
 
+/* ================== DASHBOARD STYLES ================== */
+.dashboard-content {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 30px;
+    margin-bottom: 40px;
+}
+
+.tabs {
+    display: flex;
+    gap: 10px;
+    border-bottom: 1px solid var(--border-color);
+    margin-bottom: 30px;
+}
+
+.tab-btn {
+    padding: 15px 20px;
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    font-size: 14px;
+    border-bottom: 3px solid transparent;
+    transition: all 0.3s ease;
+}
+
+.tab-btn:hover {
+    color: var(--text-secondary);
+}
+
+.tab-btn.active {
+    color: var(--primary-indigo);
+    border-bottom-color: var(--primary-indigo);
+}
+
+.tab-content {
+    display: none;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+.projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.project-card {
+    background: rgba(99, 102, 241, 0.05);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 20px;
+    transition: all 0.3s ease;
+}
+
+.project-card:hover {
+    border-color: var(--primary-indigo);
+    transform: translateY(-2px);
+}
+
+.project-card h4 {
+    margin: 0 0 10px 0;
+    color: var(--primary-indigo);
+}
+
+.project-card p {
+    margin: 5px 0;
+    font-size: 13px;
+    color: var(--text-secondary);
+}
+
+.project-card .badge {
+    display: inline-block;
+    padding: 4px 8px;
+    background: rgba(16, 185, 129, 0.2);
+    border-radius: 4px;
+    font-size: 11px;
+    color: #86efac;
+    margin-top: 10px;
+}
+
+.teammates-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.teammate-card {
+    background: rgba(99, 102, 241, 0.05);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 20px;
+    text-align: center;
+}
+
+.teammate-avatar {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--primary-indigo), #8b5cf6);
+    margin: 0 auto 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: bold;
+}
+
+.teammate-card h4 {
+    margin: 0 0 5px 0;
+}
+
+.teammate-card p {
+    margin: 3px 0;
+    font-size: 13px;
+    color: var(--text-secondary);
+}
+
+.alert {
+    padding: 15px;
+    border-radius: 6px;
+    margin-bottom: 20px;
+    display: none;
+}
+
+.alert.active {
+    display: block;
+}
+
+.alert-success {
+    background: rgba(16, 185, 129, 0.1);
+    border: 1px solid rgba(16, 185, 129, 0.3);
+    color: #86efac;
+}
+
+.alert-error {
+    background: rgba(239, 68, 68, 0.1);
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    color: #fca5a5;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 40px 20px;
+    color: var(--text-muted);
+}
+
+.empty-state p {
+    margin-bottom: 15px;
+}
+
+.chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(99, 102, 241, 0.2);
+    border: 1px solid rgba(99, 102, 241, 0.4);
+    color: var(--text-tertiary);
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    margin: 2px;
+    transition: all 0.2s ease;
+}
+
+.chip:hover {
+    background: rgba(99, 102, 241, 0.3);
+    border-color: rgba(99, 102, 241, 0.6);
+    transform: translateY(-1px);
+}
+
+/* ================== END DASHBOARD STYLES ================== */
+
 /* ================== GLOBAL & RESET ================== */
 * {
   margin: 0;

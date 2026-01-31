@@ -10,109 +10,6 @@
     <link rel="icon" type="image/png" sizes="192x192" href="assets/icons/icon-192.png">
     <link rel="apple-touch-icon" href="assets/icons/icon-192.png">
     <meta name="theme-color" content="#6366f1">
-    <style>
-        .skills-display {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            margin-top: 8px;
-        }
-        .skill-badge {
-            background: rgba(99, 102, 241, 0.2);
-            border: 1px solid rgba(99, 102, 241, 0.4);
-            color: var(--text-tertiary);
-            padding: 6px 12px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 500;
-        }
-        .matches-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 16px;
-            margin-top: 16px;
-        }
-        .match-card {
-            background: rgba(15, 23, 42, 0.6);
-            border: 1px solid rgba(99, 102, 241, 0.2);
-            padding: 20px;
-            border-radius: 12px;
-            transition: all 0.3s ease;
-        }
-        .match-card:hover {
-            transform: translateY(-4px);
-            border-color: var(--primary-blue);
-            box-shadow: 0 8px 25px rgba(0, 212, 255, 0.1);
-        }
-        .match-score {
-            display: inline-block;
-            background: var(--primary-gradient);
-            color: var(--bg-dark-0);
-            padding: 4px 10px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 600;
-            margin-left: 8px;
-        }
-        .action-btn {
-            background: rgba(99, 102, 241, 0.15);
-            border: 1px solid rgba(99, 102, 241, 0.3);
-            color: var(--text-tertiary);
-            padding: 10px 16px;
-            border-radius: 8px;
-            font-size: 13px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        .action-btn:hover {
-            background: rgba(99, 102, 241, 0.25);
-            border-color: var(--primary-indigo);
-        }
-        .action-btn:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-        }
-        .loading-spinner {
-            display: inline-block;
-            width: 16px;
-            height: 16px;
-            border: 2px solid rgba(99, 102, 241, 0.3);
-            border-top-color: var(--primary-indigo);
-            border-radius: 50%;
-            animation: spin 0.6s linear infinite;
-            margin-right: 8px;
-        }
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-        .no-matches {
-            text-align: center;
-            padding: 32px;
-            color: var(--text-secondary);
-        }
-        .form-group small {
-            display: block;
-            color: var(--text-muted);
-            font-size: 12px;
-            margin-top: 6px;
-        }
-        .alert {
-            padding: 12px 16px;
-            border-radius: 8px;
-            margin-bottom: 16px;
-            display: none;
-        }
-        .alert.success {
-            background: rgba(16, 185, 129, 0.1);
-            border: 1px solid rgba(16, 185, 129, 0.3);
-            color: #10b981;
-        }
-        .alert.error {
-            background: rgba(239, 68, 68, 0.1);
-            border: 1px solid rgba(239, 68, 68, 0.3);
-            color: var(--accent-red);
-        }
-    </style>
 </head>
 <body>
     <!-- Loading Overlay -->
@@ -121,8 +18,34 @@
         <div class="loading-text">Loading your dashboard...</div>
     </div>
 
+    <!-- Create Project Modal -->
+    <div class="modal" id="createProjectModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Create New Project</h2>
+                <button class="close-btn" id="closeCreateProject">&times;</button>
+            </div>
+            <form id="createProjectForm">
+                <div class="form-group">
+                    <label for="projectTitle">Project Title</label>
+                    <input type="text" id="projectTitle" placeholder="e.g. AI Chat App, Mobile Game" required>
+                </div>
+                <div class="form-group">
+                    <label for="projectSkills">Required Skills (comma-separated)</label>
+                    <input type="text" id="projectSkills" placeholder="e.g. React, Node.js, MongoDB, Design">
+                    <small>The skills needed for this project</small>
+                </div>
+                <div id="createProjectAlert" class="alert"></div>
+                <div class="modal-actions">
+                    <button type="submit" id="createProjectBtn" class="primary-btn">Create Project</button>
+                    <button type="button" id="cancelCreateProject" class="secondary-btn">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <!-- Edit Profile Modal -->
-    <div class="modal" id="editProfileModal" style="display: none;">
+    <div class="modal" id="editProfileModal">
         <div class="modal-content">
             <div class="modal-header">
                 <h2>Edit Profile</h2>
@@ -157,30 +80,14 @@
         </div>
     </div>
 
-    <!-- AI Matches Modal -->
-    <div class="modal" id="matchesModal" style="display: none;">
-        <div class="modal-content" style="max-width: 700px;">
-            <div class="modal-header">
-                <h2>Your Best Matches</h2>
-                <button class="close-btn" id="closeMatchesModal">&times;</button>
-            </div>
-            <div id="matchesAlert" class="alert" style="display: none;"></div>
-            <div id="matchesContent">
-                <div class="no-matches">
-                    <p>Click the button to find your best matches based on skills!</p>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Dashboard Container -->
+    <!-- Advanced Dashboard Container -->
     <div class="dashboard-container" id="dashboardContent" style="display: none;">
         <!-- Header -->
         <div class="header">
             <div class="header-left">
               <img src="assets/icons/icon-192.png" alt="PINmate" class="app-icon">
               <h1>PINmate</h1>
-              <p>Find your perfect study partner</p>
+              <p>Build your dream team</p>
             </div>
             <div class="user-info">
                 <div class="user-avatar" id="userAvatar"></div>
@@ -190,76 +97,60 @@
                 </div>
                 <div class="user-actions">
                     <button id="editProfileBtn" class="secondary-btn">Edit Profile</button>
+                    <button id="adminBtn" class="secondary-btn" style="display: none;">⚙️ Admin Panel</button>
                     <button id="logoutBtn" class="secondary-btn">Logout</button>
                 </div>
             </div>
         </div>
 
+        <!-- Alert Messages -->
+        <div id="successAlert" class="alert alert-success"></div>
+        <div id="errorAlert" class="alert alert-error"></div>
+
         <!-- Main Content -->
         <div class="main-content">
-            <!-- Profile Summary Card -->
-            <div class="card welcome-section">
-                <h2>📝 Your Profile</h2>
-                <div style="background: rgba(15, 23, 42, 0.5); padding: 16px; border-radius: 12px; margin-top: 12px;">
-                    <div style="margin-bottom: 16px;">
-                        <p style="margin-bottom: 4px; color: var(--text-muted); font-size: 12px; text-transform: uppercase;">Skills</p>
-                        <div id="skillsDisplay" class="skills-display">
-                            <span class="skill-badge">No skills added yet</span>
-                        </div>
+            <div class="dashboard-content">
+                <!-- Sidebar -->
+                <div>
+                    <div class="card">
+                        <h3>📋 Profile</h3>
+                        <div id="profileDetails"></div>
+                        <button id="editProfileBtn2" class="action-btn" style="width: 100%; margin-top: 15px;">Edit Profile</button>
                     </div>
-                    <div>
-                        <p style="margin-bottom: 4px; color: var(--text-muted); font-size: 12px; text-transform: uppercase;">Interests</p>
-                        <div id="interestsDisplay" class="skills-display">
-                            <span class="skill-badge">No interests added yet</span>
-                        </div>
+
+                    <div class="card" style="margin-top: 20px;">
+                        <h3>📊 Stats</h3>
+                        <p><strong>My Projects:</strong> <span id="myProjectsCount">0</span></p>
+                        <p><strong>My Teams:</strong> <span id="myTeamsCount">0</span></p>
+                        <p><strong>Joined:</strong> <span id="joinedDate">N/A</span></p>
                     </div>
                 </div>
-            </div>
 
-            <!-- AI Matching Card -->
-            <div class="card">
-                <div class="card-icon purple">🤖</div>
-                <h3>AI-Powered Matching</h3>
-                <p>Find students with complementary skills and interests</p>
-                <button id="findMatchesBtn" class="primary-btn" style="width: 100%; margin-top: 16px;">
-                    🔍 Find Matches
-                </button>
-                <small style="display: block; text-align: center; color: var(--text-muted); margin-top: 12px;">
-                    AI will analyze skills to find your 5 best matches
-                </small>
-            </div>
+                <!-- Main Content Tabs -->
+                <div>
+                    <div class="card">
+                        <div class="tabs">
+                            <button class="tab-btn active" onclick="switchTab('projects', event)">📁 My Projects</button>
+                            <button class="tab-btn" onclick="switchTab('teammates', event)">👥 Find Teammates</button>
+                            <button class="tab-btn" onclick="switchTab('teams', event)">🤝 My Teams</button>
+                        </div>
 
-            <!-- Stats Card -->
-            <div class="card">
-                <div class="card-icon pink">🎯</div>
-                <h3>Account Status</h3>
-                <p>Your account details and activity</p>
-                <div class="card-stats">
-                    <div class="stat-item">
-                        <span class="stat-label">Status</span>
-                        <span class="stat-value">✓ Active</span>
-                    </div>
-                    <div class="stat-item">
-                        <span class="stat-label">Matches Found</span>
-                        <span class="stat-value" id="matchCount">0</span>
-                    </div>
-                    </div>
-                </div>
-            </div>
+                        <div id="projects-tab" class="tab-content active">
+                            <h2>My Projects</h2>
+                            <button id="createProjectActionBtn" class="action-btn" style="margin-bottom: 20px;">+ Create Project</button>
+                            <div id="myProjectsContainer"></div>
+                        </div>
 
-            <!-- Profile Tips Card -->
-            <div class="card">
-                <div class="card-icon green">💡</div>
-                <h3>Pro Tips</h3>
-                <p>Get the most out of PINmate</p>
-                <div class="card-stats">
-                    <div class="stat-item">
-                        <span class="stat-label">✓ Complete your skills</span>
-                        <span class="stat-value">Help AI match you better</span>
-                    </div>
-                    <div class="stat-item">
-                        <span class="stat-label">✓ Add your interests</span>
-                        <span class="stat-value">Find like-minded students</span>
+                        <div id="teammates-tab" class="tab-content">
+                            <h2>Find Teammates</h2>
+                            <button id="findTeammatesBtn" class="action-btn" style="margin-bottom: 20px;">🔍 Find Matches</button>
+                            <div id="matchesContainer"></div>
+                        </div>
+
+                        <div id="teams-tab" class="tab-content">
+                            <h2>My Teams</h2>
+                            <div id="myTeamsContainer"></div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -267,420 +158,344 @@
     </div>
 
     <!-- Firebase SDK -->
-<script type="module">
-// dashboard.js (inline)
-import { auth, db, ref, get, update } from './firebase.js';
-import {
-  onAuthStateChanged,
-  signOut
-} from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
+    <script type="module">
+        import { 
+            auth,
+            db,
+            isUserAdmin,
+            ref,
+            get,
+            set,
+            update,
+            onAuthStateChanged,
+            signOut,
+            push
+        } from "./firebase.js";
 
-/* =====================
-   DOM ELEMENTS
-===================== */
-const loadingOverlay = document.getElementById('loadingOverlay');
-const dashboardContent = document.getElementById('dashboardContent');
-const userNameEl = document.getElementById('userName');
-const userEmailEl = document.getElementById('userEmail');
-const logoutBtn = document.getElementById('logoutBtn');
-const editProfileBtn = document.getElementById('editProfileBtn');
-const editProfileModal = document.getElementById('editProfileModal');
-const editProfileForm = document.getElementById('editProfileForm');
-const closeEditModal = document.getElementById('closeEditModal');
-const cancelEditBtn = document.getElementById('cancelEditBtn');
-const editNameInput = document.getElementById('editName');
-const editEmailInput = document.getElementById('editEmail');
-const editSkillsInput = document.getElementById('editSkills');
-const editInterestsInput = document.getElementById('editInterests');
-const editAlert = document.getElementById('editAlert');
-const saveProfileBtn = document.getElementById('saveProfileBtn');
+        let currentUser = null;
+        let currentUserData = null;
+        let isAdmin = false;
 
-// AI Matches elements
-const findMatchesBtn = document.getElementById('findMatchesBtn');
-const matchesModal = document.getElementById('matchesModal');
-const closeMatchesModal = document.getElementById('closeMatchesModal');
-const matchesContent = document.getElementById('matchesContent');
-const matchesAlert = document.getElementById('matchesAlert');
-const skillsDisplay = document.getElementById('skillsDisplay');
-const interestsDisplay = document.getElementById('interestsDisplay');
-const matchCountEl = document.getElementById('matchCount');
+        const loadingOverlay = document.getElementById('loadingOverlay');
+        const dashboardContent = document.getElementById('dashboardContent');
+        const logoutBtn = document.getElementById('logoutBtn');
+        const adminBtn = document.getElementById('adminBtn');
+        const editProfileBtn = document.getElementById('editProfileBtn');
+        const editProfileBtn2 = document.getElementById('editProfileBtn2');
 
-/* =====================
-   STATE
-===================== */
-let currentUser = null;
-let currentUserData = null;
+        onAuthStateChanged(auth, async (user) => {
+            if (!user) {
+                window.location.href = 'login.html';
+                return;
+            }
 
-/* =====================
-   UI HELPERS
-===================== */
-function showDashboard() {
-  if (loadingOverlay) loadingOverlay.style.display = 'none';
-  if (dashboardContent) dashboardContent.style.display = '';
-}
+            currentUser = user;
 
-function hideDashboard() {
-  if (dashboardContent) dashboardContent.style.display = 'none';
-  if (loadingOverlay) loadingOverlay.style.display = '';
-}
+            try {
+                await loadUserData();
 
-function openEditModal() {
-  editNameInput.value = currentUserData.fullName || '';
-  editEmailInput.value = currentUserData.email || '';
-  editSkillsInput.value = currentUserData.skills || '';
-  editInterestsInput.value = currentUserData.interests || '';
-  editAlert.style.display = 'none';
-  editAlert.textContent = '';
-  editProfileModal.style.display = 'flex';
-}
+                isAdmin = await isUserAdmin(user);
+                if (isAdmin) adminBtn.style.display = 'inline-block';
 
-function closeModal() {
-  editProfileModal.style.display = 'none';
-}
-
-function closeMatchesModalFn() {
-  matchesModal.style.display = 'none';
-}
-
-function updateProfileDisplay() {
-  // Update skills display
-  if (currentUserData.skills && currentUserData.skills.trim()) {
-    const skillsArray = currentUserData.skills.split(',').map(s => s.trim()).filter(s => s);
-    skillsDisplay.innerHTML = skillsArray.map(skill => `<span class="skill-badge">${skill}</span>`).join('');
-  } else {
-    skillsDisplay.innerHTML = '<span class="skill-badge">No skills added yet</span>';
-  }
-
-  // Update interests display
-  if (currentUserData.interests && currentUserData.interests.trim()) {
-    const interestsArray = currentUserData.interests.split(',').map(i => i.trim()).filter(i => i);
-    interestsDisplay.innerHTML = interestsArray.map(interest => `<span class="skill-badge">${interest}</span>`).join('');
-  } else {
-    interestsDisplay.innerHTML = '<span class="skill-badge">No interests added yet</span>';
-  }
-}
-
-hideDashboard();
-
-/* =====================
-   AUTH + DATA LOAD
-===================== */
-onAuthStateChanged(auth, async (user) => {
-  if (!user) {
-    window.location.href = 'login.html';
-    return;
-  }
-
-  currentUser = user;
-
-  try {
-    const userRef = ref(db, `users/${user.uid}`);
-    const snapshot = await get(userRef);
-
-    if (snapshot.exists()) {
-      currentUserData = snapshot.val();
-    } else {
-      currentUserData = { fullName: 'Student', email: user.email };
-    }
-
-    userNameEl.textContent = currentUserData.fullName || 'Student';
-    userEmailEl.textContent = currentUserData.email || user.email;
-    updateProfileDisplay();
-
-    // Check for admin claim (don't expose this to UI, just check server-side)
-    try {
-      const idTokenResult = await user.getIdTokenResult();
-      if (idTokenResult && idTokenResult.claims && idTokenResult.claims.admin === true) {
-        const adminBtn = document.createElement('button');
-        adminBtn.textContent = 'Admin Panel';
-        adminBtn.style.marginLeft = '12px';
-        adminBtn.className = 'secondary-btn';
-        adminBtn.onclick = () => {
-          window.location.href = 'admin.html';
-        };
-        document.querySelector('.user-actions').insertBefore(adminBtn, logoutBtn);
-      }
-    } catch (e) {
-      console.warn('Failed to check admin claim', e);
-    }
-
-    showDashboard();
-
-  } catch (err) {
-    console.error('Failed to load profile:', err);
-    currentUserData = { fullName: 'Student', email: user.email };
-    userNameEl.textContent = 'Student';
-    userEmailEl.textContent = user.email || '';
-    updateProfileDisplay();
-    showDashboard();
-  }
-});
-
-/* =====================
-   PROFILE EDIT LOGIC
-===================== */
-editProfileBtn.addEventListener('click', openEditModal);
-closeEditModal.addEventListener('click', closeModal);
-cancelEditBtn.addEventListener('click', closeModal);
-
-editProfileModal.addEventListener('click', (e) => {
-  if (e.target === editProfileModal) closeModal();
-});
-
-editProfileForm.addEventListener('submit', async (e) => {
-  e.preventDefault();
-  editAlert.style.display = 'none';
-  editAlert.textContent = '';
-
-  const fullName = editNameInput.value.trim();
-  const skills = editSkillsInput.value.trim();
-  const interests = editInterestsInput.value.trim();
-
-  // Validation
-  if (fullName.length < 2) {
-    editAlert.textContent = '✗ Name must be at least 2 characters.';
-    editAlert.className = 'alert error';
-    editAlert.style.display = 'block';
-    return;
-  }
-
-  try {
-    saveProfileBtn.disabled = true;
-
-    // SECURITY: Update only user's own profile
-    const userRef = ref(db, `users/${currentUser.uid}`);
-    await update(userRef, {
-      fullName,
-      skills: skills || null,
-      interests: interests || null,
-      updatedAt: Date.now()
-    });
-
-    // Update local state
-    currentUserData.fullName = fullName;
-    currentUserData.skills = skills;
-    currentUserData.interests = interests;
-    userNameEl.textContent = fullName;
-    updateProfileDisplay();
-
-    // Show success message
-    editAlert.textContent = '✓ Profile updated successfully!';
-    editAlert.className = 'alert success';
-    editAlert.style.display = 'block';
-
-    setTimeout(closeModal, 1500);
-
-  } catch (err) {
-    console.error('Error updating profile:', err);
-    editAlert.textContent = '✗ Failed to update profile: ' + (err.message || 'Unknown error');
-    editAlert.className = 'alert error';
-    editAlert.style.display = 'block';
-  } finally {
-    saveProfileBtn.disabled = false;
-  }
-});
-
-/* =====================
-   AI MATCHING LOGIC
-===================== */
-findMatchesBtn.addEventListener('click', async () => {
-  try {
-    findMatchesBtn.disabled = true;
-    matchesAlert.style.display = 'none';
-    matchesAlert.textContent = '';
-    
-    // Show loading state
-    matchesContent.innerHTML = `<div style="text-align: center; padding: 32px;">
-      <div class="loading-spinner" style="margin: 0 auto 16px; display: block;"></div>
-      <p>Analyzing skills and finding your best matches...</p>
-    </div>`;
-    
-    matchesModal.style.display = 'flex';
-
-    // Fetch all users except current user
-    const usersRef = ref(db, 'users');
-    const snapshot = await get(usersRef);
-
-    if (!snapshot.exists()) {
-      matchesContent.innerHTML = '<div class="no-matches"><p>No other students found yet.</p></div>';
-      findMatchesBtn.disabled = false;
-      return;
-    }
-
-    const allUsers = snapshot.val();
-    const otherUsers = [];
-
-    // Collect other users' data (excluding current user)
-    Object.entries(allUsers).forEach(([uid, userData]) => {
-      if (uid !== currentUser.uid) {
-        otherUsers.push({
-          uid,
-          fullName: userData.fullName || 'Student',
-          skills: userData.skills || '',
-          interests: userData.interests || ''
+                loadingOverlay.style.display = 'none';
+                dashboardContent.style.display = '';
+                await loadDashboardContent();
+            } catch (err) {
+                loadingOverlay.innerHTML = '<p style="text-align:center;color:red;">Error loading dashboard. Refresh the page.</p>';
+                console.error(err);
+            }
         });
-      }
-    });
 
-    if (otherUsers.length === 0) {
-      matchesContent.innerHTML = '<div class="no-matches"><p>No other students available for matching yet.</p></div>';
-      findMatchesBtn.disabled = false;
-      return;
-    }
+        async function loadUserData() {
+            const userRef = ref(db, `users/${currentUser.uid}`);
+            const snapshot = await get(userRef);
 
-    // Get current user's skills for matching
-    const currentSkills = (currentUserData.skills || '').split(',').map(s => s.trim().toLowerCase()).filter(s => s);
-    
-    if (currentSkills.length === 0) {
-      matchesAlert.textContent = '⚠ Add some skills to your profile for better matches!';
-      matchesAlert.className = 'alert error';
-      matchesAlert.style.display = 'block';
-      matchesContent.innerHTML = '<div class="no-matches"><p>Please update your profile with skills first.</p></div>';
-      findMatchesBtn.disabled = false;
-      return;
-    }
+            if (snapshot.exists()) {
+                currentUserData = snapshot.val();
+            } else {
+                currentUserData = {
+                    uid: currentUser.uid,
+                    email: currentUser.email,
+                    fullName: currentUser.displayName || 'Student',
+                    createdAt: new Date().toISOString(),
+                    role: 'user'
+                };
+                await set(userRef, currentUserData);
+            }
 
-    // REAL AI MATCHING LOGIC
-    // This uses Gemini API (or OpenAI - adjust endpoint as needed)
-    const matches = await callAIMatchingService(currentUserData, otherUsers);
+            document.getElementById('userName').textContent = currentUserData.fullName;
+            document.getElementById('userEmail').textContent = currentUserData.email;
 
-    if (!matches || matches.length === 0) {
-      matchesContent.innerHTML = '<div class="no-matches"><p>No suitable matches found. Try updating your skills!</p></div>';
-    } else {
-      // Display matches
-      matchCountEl.textContent = matches.length;
-      const matchesHTML = matches.map(match => `
-        <div class="match-card">
-          <h3 style="margin-top: 0;">
-            ${match.name}
-            <span class="match-score">${match.score}% Match</span>
-          </h3>
-          <div style="margin: 12px 0;">
-            <p style="margin-bottom: 4px; color: var(--text-muted); font-size: 12px; text-transform: uppercase;">Skills</p>
-            <div class="skills-display">
-              ${match.skills.split(',').map(s => s.trim()).filter(s => s).map(skill => 
-                `<span class="skill-badge">${skill}</span>`
-              ).join('') || '<span class="skill-badge">No skills listed</span>'}
-            </div>
-          </div>
-          <div style="margin-top: 12px;">
-            <p style="margin-bottom: 4px; color: var(--text-muted); font-size: 12px; text-transform: uppercase;">Reason for match</p>
-            <p style="color: var(--text-secondary); font-size: 13px; margin-bottom: 0;">${match.reason}</p>
-          </div>
-        </div>
-      `).join('');
-      
-      matchesContent.innerHTML = `<div class="matches-container">${matchesHTML}</div>`;
-    }
+            const profileDetails = `
+                <p><strong>Name:</strong> ${currentUserData.fullName}</p>
+                <p><strong>Email:</strong> ${currentUserData.email}</p>
+                <p><strong>College:</strong> ${currentUserData.college || 'Not set'}</p>
+                <p><strong>Domain:</strong> ${currentUserData.domain || 'Not set'}</p>
+                <p><strong>Skills:</strong> ${Array.isArray(currentUserData.skills) ? currentUserData.skills.join(', ') : (currentUserData.skills || 'Not set')}</p>
+            `;
+            document.getElementById('profileDetails').innerHTML = profileDetails;
+            document.getElementById('joinedDate').textContent = new Date(currentUserData.createdAt).toLocaleDateString();
+        }
 
-  } catch (err) {
-    console.error('AI Matching error:', err);
-    matchesAlert.textContent = '✗ Error finding matches: ' + (err.message || 'Please try again');
-    matchesAlert.className = 'alert error';
-    matchesAlert.style.display = 'block';
-    matchesContent.innerHTML = '<div class="no-matches"><p>Failed to find matches. Please try again later.</p></div>';
-  } finally {
-    findMatchesBtn.disabled = false;
-  }
-});
+        async function loadDashboardContent() {
+            const projectsRef = ref(db, `projects`);
+            const projectsSnapshot = await get(projectsRef);
 
-closeMatchesModal.addEventListener('click', closeMatchesModalFn);
-matchesModal.addEventListener('click', (e) => {
-  if (e.target === matchesModal) closeMatchesModalFn();
-});
+            let myProjects = [];
+            let myTeamsCount = 0;
 
-/* =====================
-   AI SERVICE INTEGRATION
-===================== */
-async function callAIMatchingService(currentUser, otherUsers) {
-  // SECURITY: Call AI from frontend with data validation
-  // Using mock AI logic since we need API key (use Gemini or OpenAI)
-  
-  try {
-    // This is a PLACEHOLDER AI implementation
-    // In production, replace with real Gemini/OpenAI API call
-    
-    // For now, implement simple skill-based matching logic
-    const currentSkills = (currentUser.skills || '')
-      .split(',')
-      .map(s => s.trim().toLowerCase())
-      .filter(s => s);
+            if (projectsSnapshot.exists()) {
+                const projects = projectsSnapshot.val();
+                Object.entries(projects).forEach(([id, project]) => {
+                    if (project.ownerId === currentUser.uid) myProjects.push({id, ...project});
+                    if (project.teamMembers && project.teamMembers[currentUser.uid]) myTeamsCount++;
+                });
+            }
 
-    if (currentSkills.length === 0) return [];
+            document.getElementById('myProjectsCount').textContent = myProjects.length;
+            document.getElementById('myTeamsCount').textContent = myTeamsCount;
 
-    // Calculate match scores based on skill overlap
-    const scoredMatches = otherUsers.map(user => {
-      const userSkills = (user.skills || '')
-        .split(',')
-        .map(s => s.trim().toLowerCase())
-        .filter(s => s);
+            renderMyProjects(myProjects);
+        }
 
-      // Calculate match percentage
-      const commonSkills = userSkills.filter(skill => currentSkills.includes(skill));
-      const matchScore = Math.round((commonSkills.length / Math.max(currentSkills.length, userSkills.length)) * 100);
+        function renderMyProjects(projects) {
+            const container = document.getElementById('myProjectsContainer');
+            if (projects.length === 0) {
+                container.innerHTML = '<div class="empty-state"><p>No projects yet. Create one!</p></div>';
+                return;
+            }
 
-      // Boost score if interests overlap
-      const currentInterests = (currentUser.interests || '')
-        .split(',')
-        .map(i => i.trim().toLowerCase())
-        .filter(i => i);
-      
-      const userInterests = (user.interests || '')
-        .split(',')
-        .map(i => i.trim().toLowerCase())
-        .filter(i => i);
+            let html = '<div class="projects-grid">';
+            projects.forEach(project => {
+                html += `
+                    <div class="project-card">
+                        <h4>${project.title}</h4>
+                        <p>${(project.description || 'No description').substring(0, 100)}...</p>
+                        <p><strong>Domain:</strong> ${project.domain || 'N/A'}</p>
+                        <p><strong>Team Size:</strong> ${project.teamSize || 'N/A'}</p>
+                        <span class="badge">${project.status || 'pending'}</span>
+                    </div>
+                `;
+            });
+            html += '</div>';
+            container.innerHTML = html;
+        }
 
-      const commonInterests = userInterests.filter(interest => currentInterests.includes(interest));
-      const interestBoost = Math.round((commonInterests.length / Math.max(1, currentInterests.length)) * 15);
+        window.switchTab = function(tabName, event) {
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
 
-      const finalScore = Math.min(100, matchScore + interestBoost);
+            document.getElementById(tabName + '-tab').classList.add('active');
+            event.target.classList.add('active');
 
-      return {
-        name: user.fullName,
-        skills: user.skills,
-        score: finalScore,
-        commonSkills,
-        commonInterests,
-        reason: generateMatchReason(commonSkills, commonInterests, user.fullName)
-      };
-    });
+            if (tabName === 'teammates') findTeammates();
+            else if (tabName === 'teams') loadMyTeams();
+        };
 
-    // Sort by score and return top 5
-    return scoredMatches
-      .filter(m => m.score > 0) // Only show matches with at least some common ground
-      .sort((a, b) => b.score - a.score)
-      .slice(0, 5);
+        window.findTeammates = async function() {
+            const usersRef = ref(db, 'users');
+            const snapshot = await get(usersRef);
+            let html = '<div class="teammates-grid">';
+            if (snapshot.exists()) {
+                const users = snapshot.val();
+                Object.entries(users).forEach(([uid, user]) => {
+                    if (uid !== currentUser.uid && !user.disabled) {
+                        html += `
+                            <div class="teammate-card">
+                                <div class="teammate-avatar">${(user.fullName || 'U').charAt(0).toUpperCase()}</div>
+                                <h4>${user.fullName}</h4>
+                                <p><strong>${user.domain || 'N/A'}</strong></p>
+                                <p><small>${Array.isArray(user.skills) ? user.skills.join(', ') : (user.skills || 'No skills')}</small></p>
+                            </div>
+                        `;
+                    }
+                });
+            }
+            html += '</div>';
+            document.getElementById('matchesContainer').innerHTML = html;
+        };
 
-  } catch (err) {
-    console.error('AI matching error:', err);
-    throw new Error('Failed to process matches: ' + err.message);
-  }
-}
+        async function loadMyTeams() {
+            const projectsRef = ref(db, 'projects');
+            const projectsSnapshot = await get(projectsRef);
+            const container = document.getElementById('myTeamsContainer');
 
-function generateMatchReason(commonSkills, commonInterests, name) {
-  if (commonSkills.length > 0 && commonInterests.length > 0) {
-    return `You both share skills like ${commonSkills.slice(0, 2).join(', ')} and interest in ${commonInterests[0]}.`;
-  } else if (commonSkills.length > 0) {
-    return `You both know ${commonSkills.slice(0, 2).join(', ')}.`;
-  } else if (commonInterests.length > 0) {
-    return `You both are interested in ${commonInterests[0]}.`;
-  }
-  return 'Potential for collaboration.';
-}
+            if (!projectsSnapshot.exists()) {
+                container.innerHTML = '<div class="empty-state"><p>No teams found</p></div>';
+                return;
+            }
 
-/* =====================
-   LOGOUT
-===================== */
-logoutBtn.addEventListener('click', async () => {
-  try {
-    await signOut(auth);
-  } catch (err) {
-    console.error('Sign out error', err);
-  }
-  window.location.href = 'login.html';
-});
-</script>
+            const projects = projectsSnapshot.val();
+            let myTeams = [];
 
+            Object.entries(projects).forEach(([id, project]) => {
+                if (project.teamMembers && project.teamMembers[currentUser.uid]) myTeams.push({id, ...project});
+            });
 
+            if (myTeams.length === 0) {
+                container.innerHTML = '<div class="empty-state"><p>You haven\'t joined any teams yet</p></div>';
+                return;
+            }
+
+            let html = '<div class="projects-grid">';
+            myTeams.forEach(team => {
+                html += `
+                    <div class="project-card">
+                        <h4>${team.title}</h4>
+                        <p><strong>Owner:</strong> ${team.ownerId === currentUser.uid ? 'You' : 'Team Member'}</p>
+                        <p><strong>Domain:</strong> ${team.domain || 'N/A'}</p>
+                        <span class="badge">${team.status || 'active'}</span>
+                    </div>
+                `;
+            });
+            html += '</div>';
+            container.innerHTML = html;
+        }
+
+        function showAlert(message, type) {
+            const alertEl = type === 'success' ? document.getElementById('successAlert') : document.getElementById('errorAlert');
+            alertEl.textContent = message;
+            alertEl.classList.add('active');
+            setTimeout(() => alertEl.classList.remove('active'), 5000);
+        }
+
+        logoutBtn.addEventListener('click', async () => {
+            try {
+                await signOut(auth);
+                window.location.href = 'login.html';
+            } catch (err) { console.error(err); }
+        });
+
+        adminBtn.addEventListener('click', () => { window.location.href = 'admin.html'; });
+        editProfileBtn.addEventListener('click', openEditModal);
+        editProfileBtn2.addEventListener('click', openEditModal);
+
+        const editProfileModal = document.getElementById('editProfileModal');
+        const editProfileForm = document.getElementById('editProfileForm');
+        const closeEditModal = document.getElementById('closeEditModal');
+        const cancelEditBtn = document.getElementById('cancelEditBtn');
+        const editNameInput = document.getElementById('editName');
+        const editEmailInput = document.getElementById('editEmail');
+        const editSkillsInput = document.getElementById('editSkills');
+        const editInterestsInput = document.getElementById('editInterests');
+        const editAlert = document.getElementById('editAlert');
+        const saveProfileBtn = document.getElementById('saveProfileBtn');
+
+        const createProjectModal = document.getElementById('createProjectModal');
+        const createProjectForm = document.getElementById('createProjectForm');
+        const closeCreateProject = document.getElementById('closeCreateProject');
+        const cancelCreateProject = document.getElementById('cancelCreateProject');
+        const createProjectActionBtn = document.getElementById('createProjectActionBtn');
+        const projectTitleInput = document.getElementById('projectTitle');
+        const projectSkillsInput = document.getElementById('projectSkills');
+        const createProjectBtn = document.getElementById('createProjectBtn');
+        const createProjectAlert = document.getElementById('createProjectAlert');
+
+        function openEditModal() {
+            editNameInput.value = currentUserData.fullName || '';
+            editEmailInput.value = currentUserData.email || '';
+            editSkillsInput.value = Array.isArray(currentUserData.skills) ? currentUserData.skills.join(', ') : (currentUserData.skills || '');
+            editInterestsInput.value = Array.isArray(currentUserData.interests) ? currentUserData.interests.join(', ') : '';
+            editAlert.style.display = 'none';
+            editAlert.textContent = '';
+            editProfileModal.style.display = 'flex';
+        }
+
+        function closeModal() { editProfileModal.style.display = 'none'; }
+
+        closeEditModal.addEventListener('click', closeModal);
+        cancelEditBtn.addEventListener('click', closeModal);
+        closeCreateProject.addEventListener('click', () => createProjectModal.style.display = 'none');
+        cancelCreateProject.addEventListener('click', () => createProjectModal.style.display = 'none');
+        createProjectActionBtn.addEventListener('click', () => {
+            projectTitleInput.value = '';
+            projectSkillsInput.value = '';
+            createProjectAlert.style.display = 'none';
+            createProjectModal.style.display = 'flex';
+        });
+
+        editProfileForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            editAlert.style.display = 'none';
+            const fullName = editNameInput.value.trim();
+            const skills = editSkillsInput.value.trim();
+            const interests = editInterestsInput.value.trim();
+
+            if (fullName.length < 2) {
+                editAlert.textContent = '✗ Name must be at least 2 characters.';
+                editAlert.className = 'alert error';
+                editAlert.style.display = 'block';
+                return;
+            }
+
+            try {
+                saveProfileBtn.disabled = true;
+                const userRef = ref(db, `users/${currentUser.uid}`);
+                await update(userRef, {
+                    fullName,
+                    skills: skills ? skills.split(',').map(s => s.trim()) : [],
+                    interests: interests ? interests.split(',').map(i => i.trim()) : [],
+                    updatedAt: Date.now()
+                });
+
+                currentUserData.fullName = fullName;
+                currentUserData.skills = skills ? skills.split(',').map(s => s.trim()) : [];
+                currentUserData.interests = interests ? interests.split(',').map(i => i.trim()) : [];
+
+                document.getElementById('userName').textContent = fullName;
+                showAlert('✓ Profile updated successfully', 'success');
+                await loadUserData();
+                closeModal();
+            } catch (err) {
+                editAlert.textContent = '✗ Failed to update profile: ' + (err.message || 'Unknown error');
+                editAlert.className = 'alert error';
+                editAlert.style.display = 'block';
+            } finally { saveProfileBtn.disabled = false; }
+        });
+
+        createProjectForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            createProjectAlert.style.display = 'none';
+            const title = projectTitleInput.value.trim();
+            const skills = projectSkillsInput.value.trim();
+
+            if (title.length < 3) {
+                createProjectAlert.textContent = '✗ Project title must be at least 3 characters.';
+                createProjectAlert.className = 'alert error';
+                createProjectAlert.style.display = 'block';
+                return;
+            }
+
+            if (!skills) {
+                createProjectAlert.textContent = '✗ Please enter at least one required skill.';
+                createProjectAlert.className = 'alert error';
+                createProjectAlert.style.display = 'block';
+                return;
+            }
+
+            try {
+                createProjectBtn.disabled = true;
+                const projectRef = push(ref(db, 'projects'));
+                await set(projectRef, {
+                    title,
+                    requiredSkills: skills.split(',').map(s => s.trim()),
+                    ownerId: currentUser.uid,
+                    teamMembers: { [currentUser.uid]: true },
+                    createdAt: Date.now(),
+                    updatedAt: Date.now()
+                });
+
+                await loadDashboardContent();
+                showAlert('✓ Project created successfully', 'success');
+                createProjectModal.style.display = 'none';
+            } catch (err) {
+                createProjectAlert.textContent = '✗ Failed to create project: ' + (err.message || 'Unknown error');
+                createProjectAlert.className = 'alert error';
+                createProjectAlert.style.display = 'block';
+            } finally { createProjectBtn.disabled = false; }
+        });
+
+        document.getElementById('findTeammatesBtn').addEventListener('click', findTeammates);
+    </script>
 </body>
 </html>

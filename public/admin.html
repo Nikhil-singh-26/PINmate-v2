@@ -18,109 +18,119 @@
         <div class="loading-text">Loading admin dashboard...</div>
     </div>
 
-    <!-- Admin Container -->
-    <div class="dashboard-container" id="adminContent" style="display: none;">
-        <!-- Header -->
-        <div class="header">
-            <div class="header-left">
-              <img src="assets/icons/icon-192.png" alt="PINmate" class="app-icon">
-              <h1>🔐 PINmate Admin</h1>
-              <p>Manage users, projects, and system settings</p>
+    <!-- Advanced Admin Container -->
+    <div class="admin-container" id="adminContent" style="display: none;">
+        <!-- Sidebar -->
+        <nav class="admin-sidebar">
+            <div class="sidebar-header">
+                <h2>🔐 PINmate Admin</h2>
+                <p id="adminEmail">admin@example.com</p>
             </div>
-            <div class="user-info">
-                <div class="user-avatar" id="userAvatar"></div>
-                <div class="user-details">
-                    <div class="user-name" id="userName">Loading...</div>
-                    <div class="user-email" id="userEmail">Admin</div>
-                </div>
-                <div class="user-actions">
-                    <button id="dashboardBtn" class="secondary-btn">Back to Dashboard</button>
-                    <button id="logoutBtn">Logout</button>
-                </div>
-            </div>
-        </div>
+            <ul class="sidebar-menu">
+                <li><a class="menu-link active" data-section="dashboard">📊 Dashboard</a></li>
+                <li><a class="menu-link" data-section="colleges">🏫 Colleges</a></li>
+                <li><a class="menu-link" data-section="users">👥 Users</a></li>
+                <li><a class="menu-link" data-section="projects">📁 Projects</a></li>
+                <li><a class="menu-link" data-section="skills">🎯 Skills</a></li>
+                <li><a class="menu-link" data-section="domains">🌐 Domains</a></li>
+                <li><a class="menu-link" data-section="logs">📝 Activity Logs</a></li>
+                <li style="border-top: 1px solid var(--border-color); margin-top: 20px; padding-top: 20px;">
+                    <button id="dashboardBtn" class="secondary-btn" style="width: calc(100% - 40px); margin: 0 20px 10px;">Back to Dashboard</button>
+                    <button id="logoutBtn" class="logout-btn" style="width: calc(100% - 40px); margin: 0 20px;">Logout</button>
+                </li>
+            </ul>
+        </nav>
 
         <!-- Main Content -->
-        <div class="main-content">
-            <!-- Stats Section -->
-            <div class="card welcome-section">
-                <h2>📊 System Overview</h2>
-                <p class="subtitle">Monitor your PINmate platform</p>
+        <div class="admin-main">
+            <div class="admin-header">
+                <h1 id="sectionTitle">Dashboard</h1>
             </div>
 
-            <!-- User Stats -->
-            <div class="card">
-                <div class="card-icon purple">👥</div>
-                <h3>User Management</h3>
-                <p>Monitor and manage all users</p>
-                <div class="card-stats">
-                    <div class="stat-item">
-                        <span class="stat-label">Total Users</span>
-                        <span class="stat-value" id="totalUsers">0</span>
-                    </div>
-                    <div class="stat-item">
-                        <span class="stat-label">Students</span>
-                        <span class="stat-value" id="studentCount">0</span>
-                    </div>
-                    <div class="stat-item">
-                        <span class="stat-label">Admins</span>
-                        <span class="stat-value" id="adminCount">0</span>
-                    </div>
-                </div>
-                <button id="viewUsersBtn" class="action-btn" style="margin-top: 20px; width: 100%;">View All Users</button>
-            </div>
+            <!-- Alert Messages -->
+            <div id="successAlert" class="alert alert-success"></div>
+            <div id="errorAlert" class="alert alert-error"></div>
 
-            <!-- Project Stats -->
-            <div class="card">
-                <div class="card-icon pink">🚀</div>
-                <h3>Projects & Teams</h3>
-                <p>Track active projects</p>
-                <div class="card-stats">
-                    <div class="stat-item">
-                        <span class="stat-label">Total Projects</span>
-                        <span class="stat-value" id="totalProjects">0</span>
+            <!-- DASHBOARD SECTION -->
+            <section id="dashboard" class="section active">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <h3>Total Users</h3>
+                        <div class="number" id="totalUsersCount">0</div>
                     </div>
-                    <div class="stat-item">
-                        <span class="stat-label">Active</span>
-                        <span class="stat-value" id="activeProjects">0</span>
+                    <div class="stat-card">
+                        <h3>Total Projects</h3>
+                        <div class="number" id="totalProjectsCount">0</div>
                     </div>
-                    <div class="stat-item">
-                        <span class="stat-label">Completed</span>
-                        <span class="stat-value" id="completedProjects">0</span>
+                    <div class="stat-card">
+                        <h3>Pending Projects</h3>
+                        <div class="number" id="pendingProjectsCount">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Total Colleges</h3>
+                        <div class="number" id="totalCollegesCount">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Active Teams</h3>
+                        <div class="number" id="totalTeamsCount">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Disabled Users</h3>
+                        <div class="number" id="disabledUsersCount">0</div>
                     </div>
                 </div>
-                <button id="viewProjectsBtn" class="action-btn" style="margin-top: 20px; width: 100%;">View All Projects</button>
-            </div>
+            </section>
 
-            <!-- System Stats -->
-            <div class="card">
-                <div class="card-icon green">⚙️</div>
-                <h3>System Health</h3>
-                <p>Monitor database and performance</p>
-                <div class="card-stats">
-                    <div class="stat-item">
-                        <span class="stat-label">Database Status</span>
-                        <span class="stat-value" id="dbStatus">🟢 Online</span>
-                    </div>
-                    <div class="stat-item">
-                        <span class="stat-label">Last Update</span>
-                        <span class="stat-value" id="lastUpdate">Just now</span>
-                    </div>
+            <!-- COLLEGES SECTION -->
+            <section id="colleges" class="section">
+                <div class="section-title">
+                    <h2>College Management</h2>
+                    <button class="btn-primary" onclick="openAddCollegeModal()">+ Add College</button>
                 </div>
-            </div>
+                <div id="collegesTableContainer" class="table-container"></div>
+            </section>
 
-            <!-- Admin Actions -->
-            <div class="card">
-                <div class="card-icon orange">🔧</div>
-                <h3>Admin Actions</h3>
-                <p>System management tools — <strong>Admin actions require server authorization and are read-only in this UI.</strong></p>
-                <div class="quick-actions">
-                    <button class="action-btn" id="promoteUserBtn">👤 Promote User</button>
-                    <button class="action-btn" id="resetPasswordBtn">🔑 Reset Password</button>
-                    <button class="action-btn" id="deleteProjectBtn">🗑️ Delete Project</button>
-                    <button class="action-btn" id="systemSettingsBtn">⚙️ Settings</button>
+            <!-- USERS SECTION -->
+            <section id="users" class="section">
+                <div class="section-title">
+                    <h2>User Management</h2>
                 </div>
-            </div>
+                <div id="usersTableContainer" class="table-container"></div>
+            </section>
+
+            <!-- PROJECTS SECTION -->
+            <section id="projects" class="section">
+                <div class="section-title">
+                    <h2>Project Moderation</h2>
+                </div>
+                <div id="projectsTableContainer" class="table-container"></div>
+            </section>
+
+            <!-- SKILLS SECTION -->
+            <section id="skills" class="section">
+                <div class="section-title">
+                    <h2>Skills Management</h2>
+                    <button class="btn-primary" onclick="openAddSkillModal()">+ Add Skill</button>
+                </div>
+                <div id="skillsTableContainer" class="table-container"></div>
+            </section>
+
+            <!-- DOMAINS SECTION -->
+            <section id="domains" class="section">
+                <div class="section-title">
+                    <h2>Domains Management</h2>
+                    <button class="btn-primary" onclick="openAddDomainModal()">+ Add Domain</button>
+                </div>
+                <div id="domainsTableContainer" class="table-container"></div>
+            </section>
+
+            <!-- LOGS SECTION -->
+            <section id="logs" class="section">
+                <div class="section-title">
+                    <h2>Activity Logs</h2>
+                </div>
+                <div id="logsTableContainer" class="table-container"></div>
+            </section>
         </div>
     </div>
 
@@ -132,210 +142,1168 @@
         <a href="dashboard.html" class="primary-button" style="display: inline-block; margin-top: 20px;">Back to Dashboard</a>
     </div>
 
-    <!-- Admin Button Styles (Visually Disabled) -->
+    <!-- Advanced Admin Styles -->
     <style>
-      #promoteUserBtn, #resetPasswordBtn, #deleteProjectBtn, #systemSettingsBtn {
-        opacity: 0.5;
-        cursor: not-allowed !important;
-        pointer-events: none;
-      }
+        :root {
+            --primary-indigo: #6366f1;
+            --danger: #ef4444;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --dark-bg: #0f172a;
+            --card-bg: #1e293b;
+            --text-primary: #f1f5f9;
+            --text-secondary: #cbd5e1;
+            --text-muted: #94a3b8;
+            --border-color: rgba(99, 102, 241, 0.2);
+        }
+
+        .admin-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .admin-sidebar {
+            width: 250px;
+            background: var(--card-bg);
+            border-right: 1px solid var(--border-color);
+            padding: 20px 0;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+        }
+
+        .sidebar-header {
+            padding: 0 20px 30px;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 20px;
+        }
+
+        .sidebar-header h2 {
+            font-size: 18px;
+            margin-bottom: 5px;
+        }
+
+        .sidebar-header p {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .sidebar-menu {
+            list-style: none;
+        }
+
+        .sidebar-menu li {
+            margin: 0;
+        }
+
+        .sidebar-menu a {
+            display: block;
+            padding: 12px 20px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border-left: 3px solid transparent;
+            cursor: pointer;
+        }
+
+        .sidebar-menu a:hover {
+            background: rgba(99, 102, 241, 0.1);
+            color: var(--primary-indigo);
+            border-left-color: var(--primary-indigo);
+        }
+
+        .sidebar-menu a.active {
+            background: rgba(99, 102, 241, 0.15);
+            color: var(--primary-indigo);
+            border-left-color: var(--primary-indigo);
+        }
+
+        .admin-main {
+            margin-left: 250px;
+            flex: 1;
+            padding: 40px;
+        }
+
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .admin-header h1 {
+            font-size: 32px;
+        }
+
+        .logout-btn {
+            padding: 10px 20px;
+            background: var(--danger);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .logout-btn:hover {
+            background: #dc2626;
+            transform: translateY(-2px);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .stat-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .stat-card h3 {
+            font-size: 14px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            margin-bottom: 10px;
+            font-weight: 500;
+        }
+
+        .stat-card .number {
+            font-size: 36px;
+            font-weight: bold;
+            color: var(--primary-indigo);
+        }
+
+        .section {
+            display: none;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        .section-title {
+            font-size: 24px;
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .btn-primary {
+            padding: 10px 20px;
+            background: var(--primary-indigo);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            background: #4f46e5;
+            transform: translateY(-2px);
+        }
+
+        .btn-success {
+            padding: 8px 16px;
+            background: var(--success);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.3s ease;
+            margin: 5px;
+        }
+
+        .btn-success:hover {
+            background: #059669;
+        }
+
+        .btn-danger {
+            padding: 8px 16px;
+            background: var(--danger);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.3s ease;
+            margin: 5px;
+        }
+
+        .btn-danger:hover {
+            background: #dc2626;
+        }
+
+        .btn-warning {
+            padding: 8px 16px;
+            background: var(--warning);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.3s ease;
+            margin: 5px;
+        }
+
+        .btn-warning:hover {
+            background: #d97706;
+        }
+
+        .table-container {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            overflow: hidden;
+            margin-bottom: 30px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            background: rgba(99, 102, 241, 0.1);
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 13px;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        td {
+            padding: 15px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        tr:hover {
+            background: rgba(99, 102, 241, 0.05);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+        }
+
+        .modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 500px;
+            border: 1px solid var(--border-color);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .modal-header h2 {
+            font-size: 20px;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 28px;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .close-btn:hover {
+            color: var(--text-primary);
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 14px;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            background: rgba(99, 102, 241, 0.05);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            color: var(--text-primary);
+            font-size: 14px;
+            font-family: inherit;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary-indigo);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .form-actions button {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .alert {
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .alert.active {
+            display: block;
+        }
+
+        .alert-success {
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            color: #86efac;
+        }
+
+        .alert-error {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            color: #fca5a5;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-muted);
+        }
+
+        .empty-state p {
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+
+        .unauthorized {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            flex-direction: column;
+            text-align: center;
+        }
+
+        .unauthorized h1 {
+            font-size: 48px;
+            margin-bottom: 20px;
+            color: var(--danger);
+        }
+
+        .unauthorized p {
+            font-size: 18px;
+            color: var(--text-secondary);
+            margin-bottom: 30px;
+        }
     </style>
 
+    <!-- MODALS -->
+
+    <!-- Add College Modal -->
+    <div id="addCollegeModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Add College</h2>
+                <button class="close-btn" onclick="closeModal('addCollegeModal')">&times;</button>
+            </div>
+            <form onsubmit="handleAddCollege(event)">
+                <div class="form-group">
+                    <label>College Name</label>
+                    <input type="text" id="collegeName" required>
+                </div>
+                <div class="form-group">
+                    <label>City</label>
+                    <input type="text" id="collegeCity" required>
+                </div>
+                <div class="form-group">
+                    <label>State</label>
+                    <input type="text" id="collegeState" required>
+                </div>
+                <div class="form-actions">
+                    <button type="button" onclick="closeModal('addCollegeModal')" style="background: var(--text-muted); color: var(--dark-bg);">Cancel</button>
+                    <button type="submit" style="background: var(--success); color: white;">Add College</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add Skill Modal -->
+    <div id="addSkillModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Add Skill</h2>
+                <button class="close-btn" onclick="closeModal('addSkillModal')">&times;</button>
+            </div>
+            <form onsubmit="handleAddSkill(event)">
+                <div class="form-group">
+                    <label>Skill Name</label>
+                    <input type="text" id="skillName" required>
+                </div>
+                <div class="form-group">
+                    <label>Category</label>
+                    <input type="text" id="skillCategory" placeholder="e.g. Technical">
+                </div>
+                <div class="form-actions">
+                    <button type="button" onclick="closeModal('addSkillModal')" style="background: var(--text-muted); color: var(--dark-bg);">Cancel</button>
+                    <button type="submit" style="background: var(--success); color: white;">Add Skill</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add Domain Modal -->
+    <div id="addDomainModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Add Domain</h2>
+                <button class="close-btn" onclick="closeModal('addDomainModal')">&times;</button>
+            </div>
+            <form onsubmit="handleAddDomain(event)">
+                <div class="form-group">
+                    <label>Domain Name</label>
+                    <input type="text" id="domainName" placeholder="e.g. Technology, Business, Design" required>
+                </div>
+                <div class="form-actions">
+                    <button type="button" onclick="closeModal('addDomainModal')" style="background: var(--text-muted); color: var(--dark-bg);">Cancel</button>
+                    <button type="submit" style="background: var(--success); color: white;">Add Domain</button>
+                </div>
+            </form>
+        </div>
+    </div>
     <!-- Firebase SDK -->
     <script type="module">
-import { 
-  auth, 
-  db,
-  onAuthStateChanged,
-  signOut
-} from "./firebase.js";
-import {
-  ref,
-  get
-} from "https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js";
+        import { 
+            auth, 
+            db,
+            isUserAdmin,
+            onAuthStateChanged,
+            signOut
+        } from "./firebase.js";
 
-/* =====================
-   DOM ELEMENTS
-===================== */
-const loadingOverlay = document.getElementById('loadingOverlay');
-const adminContent = document.getElementById('adminContent');
-const unauthorizedMessage = document.getElementById('unauthorizedMessage');
-const userNameEl = document.getElementById('userName');
-const userEmailEl = document.getElementById('userEmail');
-const logoutBtn = document.getElementById('logoutBtn');
-const dashboardBtn = document.getElementById('dashboardBtn');
+        import {
+            ref,
+            get,
+            set,
+            update,
+            remove
+        } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js";
 
-// Stats elements
-const totalUsersEl = document.getElementById('totalUsers');
-const studentCountEl = document.getElementById('studentCount');
-const adminCountEl = document.getElementById('adminCount');
-const totalProjectsEl = document.getElementById('totalProjects');
-const activeProjectsEl = document.getElementById('activeProjects');
-const completedProjectsEl = document.getElementById('completedProjects');
+        // ============================================
+        // Global State & Auth
+        // ============================================
+        let currentUser = null;
+        let currentUserAdmin = false;
 
-/* =====================
-   STATE
-===================== */
-let currentUser = null;
-let currentUserData = null;
+        const loadingOverlay = document.getElementById('loadingOverlay');
+        const adminContent = document.getElementById('adminContent');
+        const unauthorizedMessage = document.getElementById('unauthorizedMessage');
 
-/* =====================
-   UI HELPERS
-===================== */
-function showAdminPanel() {
-  if (loadingOverlay) loadingOverlay.style.display = 'none';
-  if (adminContent) adminContent.style.display = '';
-}
+        onAuthStateChanged(auth, async (user) => {
+            if (!user) {
+                console.log("❌ No user logged in - redirecting");
+                window.location.href = 'login.html';
+                return;
+            }
 
-function showUnauthorized() {
-  if (loadingOverlay) loadingOverlay.style.display = 'none';
-  if (unauthorizedMessage) unauthorizedMessage.style.display = 'block';
-}
+            currentUser = user;
+            console.log("✅ User logged in:", user.email);
 
-/* =====================
-   DATA LOADING
-===================== */
-async function loadStats() {
-  try {
-    // Count users and roles
-    const usersRef = ref(db, 'users');
-    const usersSnapshot = await get(usersRef);
-    
-    let totalUsers = 0;
-    let studentCount = 0;
-    let adminCount = 0;
+            try {
+                currentUserAdmin = await isUserAdmin(user);
 
-    if (usersSnapshot.exists()) {
-      const users = usersSnapshot.val();
-      totalUsers = Object.keys(users).length;
-      // Do NOT trust client-side stored `role` values for authoritative admin counts.
-      // Roles are managed via server-side custom claims; show N/A for role breakdown.
-    }
+                if (!currentUserAdmin) {
+                    console.log("❌ User is not admin");
+                    loadingOverlay.style.display = 'none';
+                    unauthorizedMessage.style.display = 'block';
+                    return;
+                }
 
-    // mark role-based counts as N/A since roles are claim-based
-    studentCount = 'N/A';
-    adminCount = 'N/A';
+                console.log("✅ Admin verified - loading panel");
+                document.getElementById('adminEmail').textContent = user.email;
+                loadingOverlay.style.display = 'none';
+                adminContent.style.display = 'flex';
 
-    // Count projects
-    const projectsRef = ref(db, 'projects');
-    const projectsSnapshot = await get(projectsRef);
-    
-    let totalProjects = 0;
-    let activeProjects = 0;
-    let completedProjects = 0;
+                // Load initial data
+                loadDashboard();
+                setupMenuListeners();
 
-    if (projectsSnapshot.exists()) {
-      const projects = projectsSnapshot.val();
-      totalProjects = Object.keys(projects).length;
-      
-      for (const [id, project] of Object.entries(projects)) {
-        if (project.status === 'active') activeProjects++;
-        else if (project.status === 'completed') completedProjects++;
-      }
-    }
+            } catch (err) {
+                console.error('❌ Authorization check error:', err);
+                loadingOverlay.style.display = 'none';
+                unauthorizedMessage.style.display = 'block';
+            }
+        });
 
-    // Update UI
-    totalUsersEl.textContent = totalUsers;
-    studentCountEl.textContent = studentCount;
-    adminCountEl.textContent = adminCount;
-    totalProjectsEl.textContent = totalProjects;
-    activeProjectsEl.textContent = activeProjects;
-    completedProjectsEl.textContent = completedProjects;
+        // ============================================
+        // Menu & Navigation
+        // ============================================
+        function setupMenuListeners() {
+            document.querySelectorAll('.menu-link').forEach(link => {
+                link.addEventListener('click', function() {
+                    const section = this.dataset.section;
+                    switchSection(section);
+                });
+            });
+        }
 
-  } catch (err) {
-    console.error('Error loading stats:', err);
-  }
-}
+        function switchSection(sectionId) {
+            // Hide all sections
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.menu-link').forEach(m => m.classList.remove('active'));
 
-/* =====================
-   AUTH & ROLE CHECK
-===================== */
-onAuthStateChanged(auth, async (user) => {
-  if (!user) {
-    window.location.href = 'login.html';
-    return;
-  }
+            // Show selected section
+            const section = document.getElementById(sectionId);
+            section.classList.add('active');
+            event.target.classList.add('active');
 
-  currentUser = user;
+            // Update title
+            const titles = {
+                dashboard: 'Dashboard',
+                colleges: 'College Management',
+                users: 'User Management',
+                projects: 'Project Moderation',
+                skills: 'Skills Management',
+                domains: 'Domains Management',
+                logs: 'Activity Logs'
+            };
+            document.getElementById('sectionTitle').textContent = titles[sectionId];
 
-  try {
-    // Check admin via ID token custom claims (server-side assigned). Do NOT rely on /users/{uid}/role.
-    const idTokenResult = await user.getIdTokenResult();
-    const isAdmin = idTokenResult && idTokenResult.claims && idTokenResult.claims.admin === true;
+            // Load data for section
+            if (sectionId === 'colleges') loadColleges();
+            if (sectionId === 'users') loadUsers();
+            if (sectionId === 'projects') loadProjects();
+            if (sectionId === 'skills') loadSkills();
+            if (sectionId === 'domains') loadDomains();
+            if (sectionId === 'logs') loadLogs();
+        }
 
-    if (!isAdmin) {
-      showUnauthorized();
-      return;
-    }
+        // ============================================
+        // DASHBOARD
+        // ============================================
+        async function loadDashboard() {
+            try {
+                // Count users
+                const usersRef = ref(db, 'users');
+                const usersSnapshot = await get(usersRef);
+                let totalUsers = 0;
+                let disabledUsers = 0;
+                
+                if (usersSnapshot.exists()) {
+                    const users = usersSnapshot.val();
+                    totalUsers = Object.keys(users).length;
+                    disabledUsers = Object.values(users).filter(u => u.disabled).length;
+                }
 
-    // Load minimal user info for display
-    userNameEl.textContent = user.displayName || user.email || 'Admin';
+                // Count projects
+                const projectsRef = ref(db, 'projects');
+                const projectsSnapshot = await get(projectsRef);
+                let totalProjects = 0;
+                let pendingProjects = 0;
+                let totalTeams = 0;
+                
+                if (projectsSnapshot.exists()) {
+                    const projects = projectsSnapshot.val();
+                    totalProjects = Object.keys(projects).length;
+                    pendingProjects = Object.values(projects).filter(p => p.status === 'pending').length;
+                    totalTeams = Object.values(projects).filter(p => p.teamMembers && Object.keys(p.teamMembers).length > 1).length;
+                }
 
-    // Load statistics (admin page is read-only for clients)
-    await loadStats();
-    showAdminPanel();
+                // Count colleges
+                const collegesRef = ref(db, 'colleges');
+                const collegesSnapshot = await get(collegesRef);
+                let totalColleges = 0;
+                
+                if (collegesSnapshot.exists()) {
+                    totalColleges = Object.keys(collegesSnapshot).length;
+                }
 
-  } catch (err) {
-    console.error('Authorization check error:', err);
-    showUnauthorized();
-  }
-});
+                // Update UI
+                document.getElementById('totalUsersCount').textContent = totalUsers;
+                document.getElementById('totalProjectsCount').textContent = totalProjects;
+                document.getElementById('pendingProjectsCount').textContent = pendingProjects;
+                document.getElementById('totalCollegesCount').textContent = totalColleges;
+                document.getElementById('totalTeamsCount').textContent = totalTeams;
+                document.getElementById('disabledUsersCount').textContent = disabledUsers;
+                
+                console.log('✅ Dashboard loaded');
+            } catch (err) {
+                console.error('❌ Error loading dashboard:', err);
+                showAlert('Error loading dashboard', 'error');
+            }
+        }
 
-/* =====================
-   EVENT HANDLERS
-===================== */
-logoutBtn.addEventListener('click', async () => {
-  try {
-    await signOut(auth);
-    window.location.href = 'login.html';
-  } catch (err) {
-    console.error('Logout error:', err);
-  }
-});
+        // ============================================
+        // COLLEGES
+        // ============================================
+        async function loadColleges() {
+            try {
+                const collegesRef = ref(db, 'colleges');
+                const collegesSnapshot = await get(collegesRef);
+                const container = document.getElementById('collegesTableContainer');
 
-dashboardBtn.addEventListener('click', () => {
-  window.location.href = 'dashboard.html';
-});
+                if (!collegesSnapshot.exists()) {
+                    container.innerHTML = '<div class="empty-state"><p>No colleges yet. Click "Add College" to get started.</p></div>';
+                    return;
+                }
 
-// Action buttons (stub implementations)
-// Keep read-only or placeholder handlers. Disable client-side admin actions — they must be implemented server-side with the Admin SDK.
-document.getElementById('viewUsersBtn').addEventListener('click', () => {
-  alert('View Users - Feature coming soon');
-});
+                const colleges = collegesSnapshot.val();
+                let html = '<table>';
+                html += '<thead><tr><th>Name</th><th>City</th><th>State</th><th>Actions</th></tr></thead><tbody>';
 
-document.getElementById('viewProjectsBtn').addEventListener('click', () => {
-  alert('View Projects - Feature coming soon');
-});
+                Object.entries(colleges).forEach(([id, college]) => {
+                    html += `
+                        <tr>
+                            <td>${college.name}</td>
+                            <td>${college.city}</td>
+                            <td>${college.state}</td>
+                            <td>
+                                <button class="btn-danger" onclick="handleDeleteCollege('${id}', '${college.name}')">Delete</button>
+                            </td>
+                        </tr>
+                    `;
+                });
 
-// Disable high-privilege buttons in the UI and provide a clear TODO
-const promoteBtn = document.getElementById('promoteUserBtn');
-const resetBtn = document.getElementById('resetPasswordBtn');
-const deleteProjBtn = document.getElementById('deleteProjectBtn');
-const settingsBtn = document.getElementById('systemSettingsBtn');
-if (promoteBtn) {
-  promoteBtn.disabled = true;
-  promoteBtn.addEventListener('click', () => {
-    alert('Admin actions require server authorization. TODO: implement via server/Admin SDK.');
-  });
-}
-if (resetBtn) {
-  resetBtn.disabled = true;
-  resetBtn.addEventListener('click', () => {
-    alert('Admin actions require server authorization. TODO: implement via server/Admin SDK.');
-  });
-}
-if (deleteProjBtn) {
-  deleteProjBtn.disabled = true;
-  deleteProjBtn.addEventListener('click', () => {
-    alert('Admin actions require server authorization. TODO: implement via server/Admin SDK.');
-  });
-}
-if (settingsBtn) {
-  settingsBtn.disabled = true;
-  settingsBtn.addEventListener('click', () => {
-    alert('Admin actions require server authorization. TODO: implement via server/Admin SDK.');
-  });
-}
+                html += '</tbody></table>';
+                container.innerHTML = html;
+                console.log('✅ Colleges loaded');
+            } catch (err) {
+                console.error('❌ Error loading colleges:', err);
+                showAlert('Error loading colleges', 'error');
+            }
+        }
+
+        window.handleAddCollege = async function(e) {
+            e.preventDefault();
+            const name = document.getElementById('collegeName').value;
+            const city = document.getElementById('collegeCity').value;
+            const state = document.getElementById('collegeState').value;
+
+            try {
+                const collegeId = Date.now().toString();
+                const collegeRef = ref(db, `colleges/${collegeId}`);
+                await set(collegeRef, {
+                    name,
+                    city,
+                    state,
+                    createdAt: Date.now()
+                });
+                
+                showAlert('✅ College added successfully', 'success');
+                closeModal('addCollegeModal');
+                document.querySelector('#addCollegeModal form').reset();
+                loadColleges();
+            } catch (err) {
+                console.error('❌ Error adding college:', err);
+                showAlert('Error adding college: ' + err.message, 'error');
+            }
+        };
+
+        window.handleDeleteCollege = async function(collegeId, collegeName) {
+            if (!confirm(`Delete college "${collegeName}"?`)) return;
+
+            try {
+                const collegeRef = ref(db, `colleges/${collegeId}`);
+                await remove(collegeRef);
+                showAlert('✅ College deleted successfully', 'success');
+                loadColleges();
+            } catch (err) {
+                console.error('❌ Error deleting college:', err);
+                showAlert('Error deleting college: ' + err.message, 'error');
+            }
+        };
+
+        // ============================================
+        // USERS
+        // ============================================
+        async function loadUsers() {
+            try {
+                const usersRef = ref(db, 'users');
+                const usersSnapshot = await get(usersRef);
+                const container = document.getElementById('usersTableContainer');
+
+                if (!usersSnapshot.exists()) {
+                    container.innerHTML = '<div class="empty-state"><p>No users found</p></div>';
+                    return;
+                }
+
+                const users = usersSnapshot.val();
+                let html = '<table>';
+                html += '<thead><tr><th>Email</th><th>Name</th><th>Role</th><th>Status</th><th>Actions</th></tr></thead><tbody>';
+
+                Object.entries(users).forEach(([uid, user]) => {
+                    const role = user.role || 'user';
+                    const status = user.disabled ? '❌ Disabled' : '✅ Active';
+                    const actionBtn = role === 'admin' 
+                        ? `<button class="btn-warning" onclick="handleDemoteUser('${uid}', '${user.email}')">Demote</button>`
+                        : `<button class="btn-success" onclick="handlePromoteUser('${uid}', '${user.email}')">Promote</button>`;
+                    const disableBtn = user.disabled
+                        ? `<button class="btn-success" onclick="handleEnableUser('${uid}', '${user.email}')">Enable</button>`
+                        : `<button class="btn-danger" onclick="handleDisableUser('${uid}', '${user.email}')">Disable</button>`;
+
+                    html += `
+                        <tr>
+                            <td>${user.email}</td>
+                            <td>${user.fullName || 'N/A'}</td>
+                            <td><strong>${role}</strong></td>
+                            <td>${status}</td>
+                            <td>${actionBtn} ${disableBtn}</td>
+                        </tr>
+                    `;
+                });
+
+                html += '</tbody></table>';
+                container.innerHTML = html;
+                console.log('✅ Users loaded');
+            } catch (err) {
+                console.error('❌ Error loading users:', err);
+                showAlert('Error loading users', 'error');
+            }
+        }
+
+        window.handlePromoteUser = async function(userId, userEmail) {
+            if (!confirm(`Promote "${userEmail}" to admin?`)) return;
+
+            try {
+                const userRef = ref(db, `users/${userId}`);
+                await update(userRef, {
+                    role: 'admin',
+                    promotedAt: Date.now(),
+                    promotedBy: currentUser.email
+                });
+                showAlert('✅ User promoted to admin', 'success');
+                loadUsers();
+            } catch (err) {
+                console.error('❌ Error promoting user:', err);
+                showAlert('Error promoting user: ' + err.message, 'error');
+            }
+        };
+
+        window.handleDemoteUser = async function(userId, userEmail) {
+            if (!confirm(`Demote "${userEmail}" to user?`)) return;
+
+            try {
+                const userRef = ref(db, `users/${userId}`);
+                await update(userRef, {
+                    role: 'user',
+                    demotedAt: Date.now(),
+                    demotedBy: currentUser.email
+                });
+                showAlert('✅ User demoted to user', 'success');
+                loadUsers();
+            } catch (err) {
+                console.error('❌ Error demoting user:', err);
+                showAlert('Error demoting user: ' + err.message, 'error');
+            }
+        };
+
+        window.handleDisableUser = async function(userId, userEmail) {
+            if (!confirm(`Disable user "${userEmail}"?`)) return;
+
+            try {
+                const userRef = ref(db, `users/${userId}`);
+                await update(userRef, {
+                    disabled: true,
+                    disabledAt: Date.now(),
+                    disabledBy: currentUser.email
+                });
+                showAlert('✅ User disabled', 'success');
+                loadUsers();
+            } catch (err) {
+                console.error('❌ Error disabling user:', err);
+                showAlert('Error disabling user: ' + err.message, 'error');
+            }
+        };
+
+        window.handleEnableUser = async function(userId, userEmail) {
+            if (!confirm(`Enable user "${userEmail}"?`)) return;
+
+            try {
+                const userRef = ref(db, `users/${userId}`);
+                await update(userRef, {
+                    disabled: false,
+                    enabledAt: Date.now(),
+                    enabledBy: currentUser.email
+                });
+                showAlert('✅ User enabled', 'success');
+                loadUsers();
+            } catch (err) {
+                console.error('❌ Error enabling user:', err);
+                showAlert('Error enabling user: ' + err.message, 'error');
+            }
+        };
+
+        // ============================================
+        // PROJECTS
+        // ============================================
+        async function loadProjects() {
+            try {
+                const projectsRef = ref(db, 'projects');
+                const projectsSnapshot = await get(projectsRef);
+                const container = document.getElementById('projectsTableContainer');
+
+                if (!projectsSnapshot.exists()) {
+                    container.innerHTML = '<div class="empty-state"><p>No projects found</p></div>';
+                    return;
+                }
+
+                const projects = projectsSnapshot.val();
+                let html = '<table>';
+                html += '<thead><tr><th>Title</th><th>Owner</th><th>Status</th><th>Created</th><th>Actions</th></tr></thead><tbody>';
+
+                for (const [id, project] of Object.entries(projects)) {
+                    // Get owner info
+                    let ownerName = 'Unknown';
+                    if (project.ownerId) {
+                        try {
+                            const ownerRef = ref(db, `users/${project.ownerId}`);
+                            const ownerSnapshot = await get(ownerRef);
+                            if (ownerSnapshot.exists()) {
+                                ownerName = ownerSnapshot.val().fullName || 'Unknown';
+                            }
+                        } catch (err) {
+                            console.warn('Failed to load owner:', err);
+                        }
+                    }
+
+                    html += `
+                        <tr>
+                            <td>${project.title || 'Untitled'}</td>
+                            <td>${ownerName}</td>
+                            <td><span class="badge">${project.status || 'pending'}</span></td>
+                            <td>${new Date(project.createdAt || Date.now()).toLocaleDateString()}</td>
+                            <td>
+                                <button class="btn-danger" onclick="handleDeleteProject('${id}', '${project.title || 'Untitled'}')">Delete</button>
+                            </td>
+                        </tr>
+                    `;
+                }
+
+                html += '</tbody></table>';
+                container.innerHTML = html;
+                console.log('✅ Projects loaded');
+            } catch (err) {
+                console.error('❌ Error loading projects:', err);
+                showAlert('Error loading projects', 'error');
+            }
+        }
+
+        window.handleDeleteProject = async function(projectId, projectTitle) {
+            if (!confirm(`Delete project "${projectTitle}"?`)) return;
+
+            try {
+                const projectRef = ref(db, `projects/${projectId}`);
+                await remove(projectRef);
+                showAlert('✅ Project deleted successfully', 'success');
+                loadProjects();
+            } catch (err) {
+                console.error('❌ Error deleting project:', err);
+                showAlert('Error deleting project: ' + err.message, 'error');
+            }
+        };
+
+        // ============================================
+        // SKILLS
+        // ============================================
+        async function loadSkills() {
+            try {
+                const skillsRef = ref(db, 'skills');
+                const skillsSnapshot = await get(skillsRef);
+                const container = document.getElementById('skillsTableContainer');
+
+                if (!skillsSnapshot.exists()) {
+                    container.innerHTML = '<div class="empty-state"><p>No skills yet. Click "Add Skill" to get started.</p></div>';
+                    return;
+                }
+
+                const skills = skillsSnapshot.val();
+                let html = '<table>';
+                html += '<thead><tr><th>Name</th><th>Category</th><th>Actions</th></tr></thead><tbody>';
+
+                Object.entries(skills).forEach(([id, skill]) => {
+                    html += `
+                        <tr>
+                            <td>${skill.name}</td>
+                            <td>${skill.category || 'N/A'}</td>
+                            <td>
+                                <button class="btn-danger" onclick="handleDeleteSkill('${id}', '${skill.name}')">Delete</button>
+                            </td>
+                        </tr>
+                    `;
+                });
+
+                html += '</tbody></table>';
+                container.innerHTML = html;
+                console.log('✅ Skills loaded');
+            } catch (err) {
+                console.error('❌ Error loading skills:', err);
+                showAlert('Error loading skills', 'error');
+            }
+        }
+
+        window.handleAddSkill = async function(e) {
+            e.preventDefault();
+            const name = document.getElementById('skillName').value;
+            const category = document.getElementById('skillCategory').value;
+
+            try {
+                const skillId = Date.now().toString();
+                const skillRef = ref(db, `skills/${skillId}`);
+                await set(skillRef, {
+                    name,
+                    category: category || 'General',
+                    createdAt: Date.now()
+                });
+                
+                showAlert('✅ Skill added successfully', 'success');
+                closeModal('addSkillModal');
+                document.querySelector('#addSkillModal form').reset();
+                loadSkills();
+            } catch (err) {
+                console.error('❌ Error adding skill:', err);
+                showAlert('Error adding skill: ' + err.message, 'error');
+            }
+        };
+
+        window.handleDeleteSkill = async function(skillId, skillName) {
+            if (!confirm(`Delete skill "${skillName}"?`)) return;
+
+            try {
+                const skillRef = ref(db, `skills/${skillId}`);
+                await remove(skillRef);
+                showAlert('✅ Skill deleted successfully', 'success');
+                loadSkills();
+            } catch (err) {
+                console.error('❌ Error deleting skill:', err);
+                showAlert('Error deleting skill: ' + err.message, 'error');
+            }
+        };
+
+        // ============================================
+        // DOMAINS
+        // ============================================
+        async function loadDomains() {
+            try {
+                const domainsRef = ref(db, 'domains');
+                const domainsSnapshot = await get(domainsRef);
+                const container = document.getElementById('domainsTableContainer');
+
+                if (!domainsSnapshot.exists()) {
+                    container.innerHTML = '<div class="empty-state"><p>No domains yet. Click "Add Domain" to get started.</p></div>';
+                    return;
+                }
+
+                const domains = domainsSnapshot.val();
+                let html = '<table>';
+                html += '<thead><tr><th>Name</th><th>Actions</th></tr></thead><tbody>';
+
+                Object.entries(domains).forEach(([id, domain]) => {
+                    html += `
+                        <tr>
+                            <td>${domain.name}</td>
+                            <td>
+                                <button class="btn-danger" onclick="handleDeleteDomain('${id}', '${domain.name}')">Delete</button>
+                            </td>
+                        </tr>
+                    `;
+                });
+
+                html += '</tbody></table>';
+                container.innerHTML = html;
+                console.log('✅ Domains loaded');
+            } catch (err) {
+                console.error('❌ Error loading domains:', err);
+                showAlert('Error loading domains', 'error');
+            }
+        }
+
+        window.handleAddDomain = async function(e) {
+            e.preventDefault();
+            const name = document.getElementById('domainName').value;
+
+            try {
+                const domainId = Date.now().toString();
+                const domainRef = ref(db, `domains/${domainId}`);
+                await set(domainRef, {
+                    name,
+                    createdAt: Date.now()
+                });
+                
+                showAlert('✅ Domain added successfully', 'success');
+                closeModal('addDomainModal');
+                document.querySelector('#addDomainModal form').reset();
+                loadDomains();
+            } catch (err) {
+                console.error('❌ Error adding domain:', err);
+                showAlert('Error adding domain: ' + err.message, 'error');
+            }
+        };
+
+        window.handleDeleteDomain = async function(domainId, domainName) {
+            if (!confirm(`Delete domain "${domainName}"?`)) return;
+
+            try {
+                const domainRef = ref(db, `domains/${domainId}`);
+                await remove(domainRef);
+                showAlert('✅ Domain deleted successfully', 'success');
+                loadDomains();
+            } catch (err) {
+                console.error('❌ Error deleting domain:', err);
+                showAlert('Error deleting domain: ' + err.message, 'error');
+            }
+        };
+
+        // ============================================
+        // LOGS
+        // ============================================
+        async function loadLogs() {
+            try {
+                const logsRef = ref(db, 'adminLogs');
+                const logsSnapshot = await get(logsRef);
+                const container = document.getElementById('logsTableContainer');
+
+                if (!logsSnapshot.exists()) {
+                    container.innerHTML = '<div class="empty-state"><p>No activity logs found</p></div>';
+                    return;
+                }
+
+                const logs = logsSnapshot.val();
+                let html = '<table>';
+                html += '<thead><tr><th>Action</th><th>User</th><th>Timestamp</th></tr></thead><tbody>';
+
+                Object.entries(logs)
+                    .sort((a, b) => b[1].timestamp - a[1].timestamp)
+                    .slice(0, 100) // Show last 100 logs
+                    .forEach(([id, log]) => {
+                        html += `
+                            <tr>
+                                <td>${log.action}</td>
+                                <td>${log.userEmail}</td>
+                                <td>${new Date(log.timestamp).toLocaleString()}</td>
+                            </tr>
+                        `;
+                    });
+
+                html += '</tbody></table>';
+                container.innerHTML = html;
+                console.log('✅ Logs loaded');
+            } catch (err) {
+                console.error('❌ Error loading logs:', err);
+                showAlert('Error loading logs', 'error');
+            }
+        }
+
+        // ============================================
+        // UTILITY FUNCTIONS
+        // ============================================
+        function showAlert(message, type) {
+            const alertEl = type === 'success' ? document.getElementById('successAlert') : document.getElementById('errorAlert');
+            alertEl.textContent = message;
+            alertEl.classList.add('active');
+            
+            setTimeout(() => {
+                alertEl.classList.remove('active');
+            }, 5000);
+        }
+
+        window.openAddCollegeModal = function() {
+            document.getElementById('addCollegeModal').style.display = 'flex';
+        };
+
+        window.openAddSkillModal = function() {
+            document.getElementById('addSkillModal').style.display = 'flex';
+        };
+
+        window.openAddDomainModal = function() {
+            document.getElementById('addDomainModal').style.display = 'flex';
+        };
+
+        window.closeModal = function(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        };
+
+        // ============================================
+        // EVENT HANDLERS
+        // ============================================
+        document.getElementById('logoutBtn').addEventListener('click', async () => {
+            try {
+                console.log("🔐 Logging out...");
+                await signOut(auth);
+                console.log("✅ Logout successful");
+                window.location.href = 'login.html';
+            } catch (err) {
+                console.error('❌ Logout error:', err);
+            }
+        });
+
+        document.getElementById('dashboardBtn').addEventListener('click', () => {
+            console.log("📱 Going back to dashboard");
+            window.location.href = 'dashboard.html';
+        });
+
+        // Close modals when clicking outside
+        document.querySelectorAll('.modal').forEach(modal => {
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    modal.style.display = 'none';
+                }
+            });
+        });
+    </script>
 </script>
 
 </body>
