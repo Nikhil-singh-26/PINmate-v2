@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="PINmate - Find your perfect team on campus for projects, hackathons, research, and startups.">
+    <title>PINmate - Find Your Perfect Team on Campus</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="manifest" href="/manifest.json">
+    <link rel="manifest" href="/manifest.json">
+    <link rel="shortcut icon" href="assets/icons/icon-192.png">
+    <link rel="icon" href="assets/icons/icon-192.png" type="image/x-icon">
+    <link rel="icon" type="image/png" sizes="32x32" href="assets/icons/icon-192.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="assets/icons/icon-192.png">
+    <link rel="apple-touch-icon" href="assets/icons/icon-192.png">
+    <link rel="mask-icon" href="assets/icons/icon-192.png" color="#6366f1">
+    <meta name="msapplication-TileImage" content="assets/icons/icon-192.png">
+    <meta name="theme-color" content="#6366f1">
+        <style>
+            /* Video modal styles */
+            #videoModal{display:none;position:fixed;inset:0;z-index:12000;background:rgba(2,6,23,0.85);align-items:center;justify-content:center;padding:24px}
+            #videoModal.active{display:flex}
+            #videoModal .modal-content{max-width:1100px;width:100%;max-height:90vh;position:relative}
+            #videoModal video{width:100%;height:auto;max-height:90vh;border-radius:10px;background:#000;display:block}
+            #videoModal .close-btn{position:absolute;right:-12px;top:-12px;width:40px;height:40px;border-radius:50%;border:none;background:rgba(0,0,0,0.6);color:#fff;font-size:22px;cursor:pointer}
+            @media (max-width:600px){#videoModal .modal-content{max-width:95%}}
+        </style>
+
+</head>
+<body>
+    <!-- Header & Navigation -->
+    <header>
+        <div class="container">
+            <nav>
+                <div class="logo"><img src="assets/icons/icon-192.png" alt="PINmate" class="app-icon">PINmate</div>
+                <ul class="nav-links" id="navLinks">
+                    <li><a href="#about">About</a></li>
+                    <li><a href="#features">Features</a></li>
+                    <li><a href="#how-it-works">How It Works</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                    <li><a href="login.html" class="cta-button">Get Started</a></li>
+                </ul>
+                <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Toggle menu">
+                    
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <div class="hero-text">
+                    <h1>Find Your Perfect Team on Campus</h1>
+                    <p>Connect with the right peers for projects, hackathons, research, and startups.</p>
+                    <div class="hero-buttons">
+                        <a href="login.html" class="primary-button">Get Started</a>
+                        <a href="#demo" class="secondary-button">Watch Demo</a>
+                    </div>
+                </div>
+                <div class="hero-image">
+                    <div class="hero-illustration">
+                        <div class="illustration-content">
+                            <div class="illustration-icon">👥</div>
+                            <div class="illustration-text">Join thousands of students building together</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features" id="features">
+        <div class="container">
+            <div class="section-header">
+                <h2>Why Choose PINmate?</h2>
+                <p>Everything you need to build your dream team and bring ideas to life</p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">🔍</div>
+                    <h3>Find Teammates Fast</h3>
+                    <p>Filter by skills and interests to form the right team quickly. Our smart matching algorithm connects you with compatible collaborators.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">💡</div>
+                    <h3>Post Your Ideas</h3>
+                    <p>Share projects and attract the right collaborators. Showcase your vision and let talented students join your journey.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🚀</div>
+                    <h3>Join Exciting Projects</h3>
+                    <p>Browse and join opportunities that match your skills. Discover projects ranging from hackathons to research initiatives.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section class="how-it-works" id="how-it-works">
+        <div class="container">
+            <div class="section-header">
+                <h2>How It Works</h2>
+                <p>Get started in three simple steps</p>
+            </div>
+            <div class="steps">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <h3>Create Your Profile</h3>
+                    <p>Add your skills and interests. Let others know what you bring to the table and what you're passionate about.</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <h3>Browse Opportunities</h3>
+                    <p>Find projects looking for teammates. Explore a variety of opportunities that align with your interests and expertise.</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <h3>Connect & Collaborate</h3>
+                    <p>Express interest and join a team. Start building amazing projects with talented peers from your campus.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sample Opportunities Section -->
+    <section class="opportunities" id="about">
+        <div class="container">
+            <div class="section-header">
+                <h2>Trending Opportunities</h2>
+                <p>Join these exciting projects or create your own</p>
+            </div>
+            <div class="opportunities-grid">
+                <div class="opportunity-card">
+                    <span class="opportunity-badge">Hackathon</span>
+                    <h3>Hackathon Team Wanted</h3>
+                    <div class="opportunity-tags">
+                        <span class="tag">ML</span>
+                        <span class="tag">Frontend</span>
+                        <span class="tag">React</span>
+                    </div>
+                    <p>Looking for passionate developers to build an AI-powered productivity app. Let's win this together!</p>
+                    <div class="opportunity-meta">
+                        👥 Looking for 2–3 members
+                    </div>
+                </div>
+                <div class="opportunity-card">
+                    <span class="opportunity-badge">Startup</span>
+                    <h3>Startup Idea</h3>
+                    <div class="opportunity-tags">
+                        <span class="tag">UX Design</span>
+                        <span class="tag">Backend</span>
+                        <span class="tag">Node.js</span>
+                    </div>
+                    <p>Building a campus marketplace platform. Need talented designers and backend developers to join the founding team.</p>
+                    <div class="opportunity-meta">
+                        👥 Looking for 3–4 members
+                    </div>
+                </div>
+                <div class="opportunity-card">
+                    <span class="opportunity-badge">Research</span>
+                    <h3>Research Project</h3>
+                    <div class="opportunity-tags">
+                        <span class="tag">AI</span>
+                        <span class="tag">Healthcare</span>
+                        <span class="tag">Python</span>
+                    </div>
+                    <p>AI in Healthcare research project. Seeking collaborators with machine learning experience for publication-worthy work.</p>
+                    <div class="opportunity-meta">
+                        👥 Looking for 2 members
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Final CTA Section -->
+    <section class="final-cta">
+        <div class="container">
+            <h2>Ready to Build Something Great?</h2>
+            <a href="signup.html" class="cta-button">Get Started</a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer id="contact">
+        <div class="container">
+            <p>&copy; 2026 PINmate. Connecting Campus Innovators</p>
+        </div>
+    </footer>
+
+    <!-- Optional: Mobile Menu Toggle Script -->
+    <script>
+        const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+        const navLinks = document.getElementById('navLinks');
+
+        if (mobileMenuToggle && navLinks) {
+        mobileMenuToggle.addEventListener('click', function() {
+            navLinks.classList.toggle('active');
+            this.textContent = navLinks.classList.contains('active') ? '✕' : '☰';
+        });
+
+        // Close menu when clicking on a link
+        navLinks.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', function() {
+                navLinks.classList.remove('active');
+                mobileMenuToggle.textContent = '☰';
+            });
+        });
+    }
+    </script>
+        <!-- Video Modal -->
+        <div id="videoModal" role="dialog" aria-hidden="true">
+                <div class="modal-content">
+                        <button class="close-btn" id="videoCloseBtn" aria-label="Close">×</button>
+                        <video id="demoVideo" controls preload="metadata" playsinline webkit-playsinline>
+                            <source src="/assets/video/demo.mp4" type="video/mp4">
+                                Your browser does not support the video tag.
+                        </video>
+                </div>
+        </div>
+
+     <script>
+(function(){
+    const trigger = document.querySelector('.secondary-button');
+    const modal = document.getElementById('videoModal');
+    const video = document.getElementById('demoVideo');
+    const closeBtn = document.getElementById('videoCloseBtn');
+    if (!trigger || !modal || !video || !closeBtn) return;
+
+    trigger.addEventListener('click', (e) => {
+        e.preventDefault();
+        openModal();
+    });
+
+    function openModal(){
+    modal.classList.add('active');
+    modal.setAttribute('aria-hidden','false');
+    document.body.style.overflow = 'hidden';
+
+    video.muted = true;        // IMPORTANT
+    video.currentTime = 0;
+
+    const playPromise = video.play();
+    if (playPromise !== undefined) {
+        playPromise.catch(() => {
+            console.warn('Autoplay blocked — user must press play');
+        });
+    }
+}
+
+
+    function closeModal(){
+        modal.classList.remove('active');
+        modal.setAttribute('aria-hidden','true');
+        video.pause();
+        video.currentTime = 0;
+        document.body.style.overflow = '';
+    }
+
+    closeBtn.addEventListener('click', closeModal);
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) closeModal();
+    });
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && modal.classList.contains('active')) {
+            closeModal();
+        }
+    });
+})();
+</script>
+
+</body>
+</html>

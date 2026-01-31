@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PINmate - Admin Dashboard</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="manifest" href="/manifest.json">
+    <link rel="icon" href="assets/icons/icon-192.png" type="image/x-icon">
+    <link rel="icon" type="image/png" sizes="192x192" href="assets/icons/icon-192.png">
+    <link rel="apple-touch-icon" href="assets/icons/icon-192.png">
+    <meta name="theme-color" content="#6366f1">
+</head>
+<body>
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="spinner"></div>
+        <div class="loading-text">Loading admin dashboard...</div>
+    </div>
+
+    <!-- Admin Container -->
+    <div class="dashboard-container" id="adminContent" style="display: none;">
+        <!-- Header -->
+        <div class="header">
+            <div class="header-left">
+              <img src="assets/icons/icon-192.png" alt="PINmate" class="app-icon">
+              <h1>🔐 PINmate Admin</h1>
+              <p>Manage users, projects, and system settings</p>
+            </div>
+            <div class="user-info">
+                <div class="user-avatar" id="userAvatar"></div>
+                <div class="user-details">
+                    <div class="user-name" id="userName">Loading...</div>
+                    <div class="user-email" id="userEmail">Admin</div>
+                </div>
+                <div class="user-actions">
+                    <button id="dashboardBtn" class="secondary-btn">Back to Dashboard</button>
+                    <button id="logoutBtn">Logout</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Stats Section -->
+            <div class="card welcome-section">
+                <h2>📊 System Overview</h2>
+                <p class="subtitle">Monitor your PINmate platform</p>
+            </div>
+
+            <!-- User Stats -->
+            <div class="card">
+                <div class="card-icon purple">👥</div>
+                <h3>User Management</h3>
+                <p>Monitor and manage all users</p>
+                <div class="card-stats">
+                    <div class="stat-item">
+                        <span class="stat-label">Total Users</span>
+                        <span class="stat-value" id="totalUsers">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Students</span>
+                        <span class="stat-value" id="studentCount">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Admins</span>
+                        <span class="stat-value" id="adminCount">0</span>
+                    </div>
+                </div>
+                <button id="viewUsersBtn" class="action-btn" style="margin-top: 20px; width: 100%;">View All Users</button>
+            </div>
+
+            <!-- Project Stats -->
+            <div class="card">
+                <div class="card-icon pink">🚀</div>
+                <h3>Projects & Teams</h3>
+                <p>Track active projects</p>
+                <div class="card-stats">
+                    <div class="stat-item">
+                        <span class="stat-label">Total Projects</span>
+                        <span class="stat-value" id="totalProjects">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Active</span>
+                        <span class="stat-value" id="activeProjects">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Completed</span>
+                        <span class="stat-value" id="completedProjects">0</span>
+                    </div>
+                </div>
+                <button id="viewProjectsBtn" class="action-btn" style="margin-top: 20px; width: 100%;">View All Projects</button>
+            </div>
+
+            <!-- System Stats -->
+            <div class="card">
+                <div class="card-icon green">⚙️</div>
+                <h3>System Health</h3>
+                <p>Monitor database and performance</p>
+                <div class="card-stats">
+                    <div class="stat-item">
+                        <span class="stat-label">Database Status</span>
+                        <span class="stat-value" id="dbStatus">🟢 Online</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Last Update</span>
+                        <span class="stat-value" id="lastUpdate">Just now</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Admin Actions -->
+            <div class="card">
+                <div class="card-icon orange">🔧</div>
+                <h3>Admin Actions</h3>
+                <p>System management tools — <strong>Admin actions require server authorization and are read-only in this UI.</strong></p>
+                <div class="quick-actions">
+                    <button class="action-btn" id="promoteUserBtn">👤 Promote User</button>
+                    <button class="action-btn" id="resetPasswordBtn">🔑 Reset Password</button>
+                    <button class="action-btn" id="deleteProjectBtn">🗑️ Delete Project</button>
+                    <button class="action-btn" id="systemSettingsBtn">⚙️ Settings</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Unauthorized Message -->
+    <div id="unauthorizedMessage" style="display: none; padding: 40px; text-align: center;">
+        <h1>❌ Unauthorized Access</h1>
+        <p>You do not have permission to access the admin panel.</p>
+        <p>Please log in with an admin account or contact your administrator.</p>
+        <a href="dashboard.html" class="primary-button" style="display: inline-block; margin-top: 20px;">Back to Dashboard</a>
+    </div>
+
+    <!-- Admin Button Styles (Visually Disabled) -->
+    <style>
+      #promoteUserBtn, #resetPasswordBtn, #deleteProjectBtn, #systemSettingsBtn {
+        opacity: 0.5;
+        cursor: not-allowed !important;
+        pointer-events: none;
+      }
+    </style>
+
+    <!-- Firebase SDK -->
+    <script type="module">
+import { 
+  auth, 
+  db,
+  onAuthStateChanged,
+  signOut
+} from "./firebase.js";
+import {
+  ref,
+  get
+} from "https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js";
+
+/* =====================
+   DOM ELEMENTS
+===================== */
+const loadingOverlay = document.getElementById('loadingOverlay');
+const adminContent = document.getElementById('adminContent');
+const unauthorizedMessage = document.getElementById('unauthorizedMessage');
+const userNameEl = document.getElementById('userName');
+const userEmailEl = document.getElementById('userEmail');
+const logoutBtn = document.getElementById('logoutBtn');
+const dashboardBtn = document.getElementById('dashboardBtn');
+
+// Stats elements
+const totalUsersEl = document.getElementById('totalUsers');
+const studentCountEl = document.getElementById('studentCount');
+const adminCountEl = document.getElementById('adminCount');
+const totalProjectsEl = document.getElementById('totalProjects');
+const activeProjectsEl = document.getElementById('activeProjects');
+const completedProjectsEl = document.getElementById('completedProjects');
+
+/* =====================
+   STATE
+===================== */
+let currentUser = null;
+let currentUserData = null;
+
+/* =====================
+   UI HELPERS
+===================== */
+function showAdminPanel() {
+  if (loadingOverlay) loadingOverlay.style.display = 'none';
+  if (adminContent) adminContent.style.display = '';
+}
+
+function showUnauthorized() {
+  if (loadingOverlay) loadingOverlay.style.display = 'none';
+  if (unauthorizedMessage) unauthorizedMessage.style.display = 'block';
+}
+
+/* =====================
+   DATA LOADING
+===================== */
+async function loadStats() {
+  try {
+    // Count users and roles
+    const usersRef = ref(db, 'users');
+    const usersSnapshot = await get(usersRef);
+    
+    let totalUsers = 0;
+    let studentCount = 0;
+    let adminCount = 0;
+
+    if (usersSnapshot.exists()) {
+      const users = usersSnapshot.val();
+      totalUsers = Object.keys(users).length;
+      // Do NOT trust client-side stored `role` values for authoritative admin counts.
+      // Roles are managed via server-side custom claims; show N/A for role breakdown.
+    }
+
+    // mark role-based counts as N/A since roles are claim-based
+    studentCount = 'N/A';
+    adminCount = 'N/A';
+
+    // Count projects
+    const projectsRef = ref(db, 'projects');
+    const projectsSnapshot = await get(projectsRef);
+    
+    let totalProjects = 0;
+    let activeProjects = 0;
+    let completedProjects = 0;
+
+    if (projectsSnapshot.exists()) {
+      const projects = projectsSnapshot.val();
+      totalProjects = Object.keys(projects).length;
+      
+      for (const [id, project] of Object.entries(projects)) {
+        if (project.status === 'active') activeProjects++;
+        else if (project.status === 'completed') completedProjects++;
+      }
+    }
+
+    // Update UI
+    totalUsersEl.textContent = totalUsers;
+    studentCountEl.textContent = studentCount;
+    adminCountEl.textContent = adminCount;
+    totalProjectsEl.textContent = totalProjects;
+    activeProjectsEl.textContent = activeProjects;
+    completedProjectsEl.textContent = completedProjects;
+
+  } catch (err) {
+    console.error('Error loading stats:', err);
+  }
+}
+
+/* =====================
+   AUTH & ROLE CHECK
+===================== */
+onAuthStateChanged(auth, async (user) => {
+  if (!user) {
+    window.location.href = 'login.html';
+    return;
+  }
+
+  currentUser = user;
+
+  try {
+    // Check admin via ID token custom claims (server-side assigned). Do NOT rely on /users/{uid}/role.
+    const idTokenResult = await user.getIdTokenResult();
+    const isAdmin = idTokenResult && idTokenResult.claims && idTokenResult.claims.admin === true;
+
+    if (!isAdmin) {
+      showUnauthorized();
+      return;
+    }
+
+    // Load minimal user info for display
+    userNameEl.textContent = user.displayName || user.email || 'Admin';
+
+    // Load statistics (admin page is read-only for clients)
+    await loadStats();
+    showAdminPanel();
+
+  } catch (err) {
+    console.error('Authorization check error:', err);
+    showUnauthorized();
+  }
+});
+
+/* =====================
+   EVENT HANDLERS
+===================== */
+logoutBtn.addEventListener('click', async () => {
+  try {
+    await signOut(auth);
+    window.location.href = 'login.html';
+  } catch (err) {
+    console.error('Logout error:', err);
+  }
+});
+
+dashboardBtn.addEventListener('click', () => {
+  window.location.href = 'dashboard.html';
+});
+
+// Action buttons (stub implementations)
+// Keep read-only or placeholder handlers. Disable client-side admin actions — they must be implemented server-side with the Admin SDK.
+document.getElementById('viewUsersBtn').addEventListener('click', () => {
+  alert('View Users - Feature coming soon');
+});
+
+document.getElementById('viewProjectsBtn').addEventListener('click', () => {
+  alert('View Projects - Feature coming soon');
+});
+
+// Disable high-privilege buttons in the UI and provide a clear TODO
+const promoteBtn = document.getElementById('promoteUserBtn');
+const resetBtn = document.getElementById('resetPasswordBtn');
+const deleteProjBtn = document.getElementById('deleteProjectBtn');
+const settingsBtn = document.getElementById('systemSettingsBtn');
+if (promoteBtn) {
+  promoteBtn.disabled = true;
+  promoteBtn.addEventListener('click', () => {
+    alert('Admin actions require server authorization. TODO: implement via server/Admin SDK.');
+  });
+}
+if (resetBtn) {
+  resetBtn.disabled = true;
+  resetBtn.addEventListener('click', () => {
+    alert('Admin actions require server authorization. TODO: implement via server/Admin SDK.');
+  });
+}
+if (deleteProjBtn) {
+  deleteProjBtn.disabled = true;
+  deleteProjBtn.addEventListener('click', () => {
+    alert('Admin actions require server authorization. TODO: implement via server/Admin SDK.');
+  });
+}
+if (settingsBtn) {
+  settingsBtn.disabled = true;
+  settingsBtn.addEventListener('click', () => {
+    alert('Admin actions require server authorization. TODO: implement via server/Admin SDK.');
+  });
+}
+</script>
+
+</body>
+</html>

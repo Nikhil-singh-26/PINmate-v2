@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PINmate - Dashboard</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="manifest" href="/manifest.json">
+    <link rel="icon" href="assets/icons/icon-192.png" type="image/x-icon">
+    <link rel="icon" type="image/png" sizes="192x192" href="assets/icons/icon-192.png">
+    <link rel="apple-touch-icon" href="assets/icons/icon-192.png">
+    <meta name="theme-color" content="#6366f1">
+</head>
+<body>
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="spinner"></div>
+        <div class="loading-text">Loading your dashboard...</div>
+    </div>
+
+    <!-- Edit Profile Modal -->
+    <div class="modal" id="editProfileModal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Edit Profile</h2>
+                <button class="close-btn" id="closeEditModal">&times;</button>
+            </div>
+            <form id="editProfileForm">
+                <div class="form-group">
+                    <label for="editName">Full Name</label>
+                    <input type="text" id="editName" placeholder="Enter your full name" required>
+                </div>
+                <div class="form-group">
+                    <label for="editEmail">Email Address</label>
+                    <input type="email" id="editEmail" placeholder="Enter your email" disabled>
+                    <small>Email cannot be changed</small>
+                </div>
+                <div class="form-group">
+                    <label for="editSkills">Skills (comma-separated)</label>
+                    <input type="text" id="editSkills" placeholder="e.g. React, Python, Design">
+                </div>
+                <div class="modal-actions">
+                    <button type="submit" id="saveProfileBtn" class="primary-btn">Save Changes</button>
+                    <button type="button" id="cancelEditBtn" class="secondary-btn">Cancel</button>
+                </div>
+                <div id="editAlert" class="alert" style="display: none; margin-top: 10px;"></div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Dashboard Container -->
+    <div class="dashboard-container" id="dashboardContent" style="display: none;">
+        <!-- Header -->
+        <div class="header">
+            <div class="header-left">
+              <img src="assets/icons/icon-192.png" alt="PINmate" class="app-icon">
+              <h1>PINmate</h1>
+              <p>Welcome to your dashboard</p>
+            </div>
+            <div class="user-info">
+                <div class="user-avatar" id="userAvatar"></div>
+                <div class="user-details">
+                    <div class="user-name" id="userName">Loading...</div>
+                    <div class="user-email" id="userEmail">Loading...</div>
+                </div>
+                <div class="user-actions">
+                    <button id="editProfileBtn" class="secondary-btn">Edit Profile</button>
+                    <button id="logoutBtn">Logout</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Welcome Section -->
+            <div class="card welcome-section">
+                <h2>🎉 Welcome to PINmate!</h2>
+                <p class="subtitle">Get started by exploring the features below or creating your first project.</p>
+                <div class="quick-actions">
+                    <button class="action-btn">📌 Create New PIN</button>
+                    <button class="action-btn">📁 Browse Projects</button>
+                    <button class="action-btn">⚙️ Settings</button>
+                    <button class="action-btn">📊 View Analytics</button>
+                </div>
+            </div>
+
+            <!-- Stats Card 1 -->
+            <div class="card">
+                <div class="card-icon purple">📊</div>
+                <h3>Your Statistics</h3>
+                <p>Track your progress and achievements</p>
+                <div class="card-stats">
+                    <div class="stat-item">
+                        <span class="stat-label">Total PINs</span>
+                        <span class="stat-value">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Active Projects</span>
+                        <span class="stat-value">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Completed</span>
+                        <span class="stat-value">0</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stats Card 2 -->
+            <div class="card">
+                <div class="card-icon pink">🎯</div>
+                <h3>Recent Activity</h3>
+                <p>Your latest actions and updates</p>
+                <div class="card-stats">
+                    <div class="stat-item">
+                        <span class="stat-label">Last Login</span>
+                        <span class="stat-value" id="lastLogin">Just now</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Account Created</span>
+                        <span class="stat-value" id="accountCreated">Today</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stats Card 3 -->
+            <div class="card">
+                <div class="card-icon green">💼</div>
+                <h3>Quick Access</h3>
+                <p>Your most used features</p>
+                <div class="card-stats">
+                    <div class="stat-item">
+                        <span class="stat-label">Favorites</span>
+                        <span class="stat-value">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Shared</span>
+                        <span class="stat-value">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Templates</span>
+                        <span class="stat-value">0</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stats Card 4 -->
+            <div class="card">
+                <div class="card-icon orange">🚀</div>
+                <h3>Getting Started</h3>
+                <p>Tips to make the most of PINmate</p>
+                <div class="card-stats">
+                    <div class="stat-item">
+                        <span class="stat-label">Profile</span>
+                        <span class="stat-value">✓ Complete</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">First PIN</span>
+                        <span class="stat-value">Pending</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Tutorial</span>
+                        <span class="stat-value">Start</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase SDK -->
+<script type="module">
+// dashboard.js (inline)
+import { auth, db, ref, get, update } from './firebase.js';
+import {
+  onAuthStateChanged,
+  signOut
+} from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
+
+/* =====================
+   DOM ELEMENTS
+===================== */
+const loadingOverlay = document.getElementById('loadingOverlay');
+const dashboardContent = document.getElementById('dashboardContent');
+const userNameEl = document.getElementById('userName');
+const userEmailEl = document.getElementById('userEmail');
+const logoutBtn = document.getElementById('logoutBtn');
+const editProfileBtn = document.getElementById('editProfileBtn');
+const editProfileModal = document.getElementById('editProfileModal');
+const editProfileForm = document.getElementById('editProfileForm');
+const closeEditModal = document.getElementById('closeEditModal');
+const cancelEditBtn = document.getElementById('cancelEditBtn');
+const editNameInput = document.getElementById('editName');
+const editEmailInput = document.getElementById('editEmail');
+const editSkillsInput = document.getElementById('editSkills');
+const editAlert = document.getElementById('editAlert');
+const saveProfileBtn = document.getElementById('saveProfileBtn');
+
+/* =====================
+   STATE
+===================== */
+let currentUser = null;
+let currentUserData = null;
+
+/* =====================
+   UI HELPERS
+===================== */
+function showDashboard() {
+  if (loadingOverlay) loadingOverlay.style.display = 'none';
+  if (dashboardContent) dashboardContent.style.display = '';
+}
+
+function hideDashboard() {
+  if (dashboardContent) dashboardContent.style.display = 'none';
+  if (loadingOverlay) loadingOverlay.style.display = '';
+}
+
+function openEditModal() {
+  editNameInput.value = currentUserData.fullName || '';
+  editEmailInput.value = currentUserData.email || '';
+  editSkillsInput.value = currentUserData.skills || '';
+  editAlert.style.display = 'none';
+  editAlert.textContent = '';
+  editProfileModal.style.display = 'flex';
+}
+
+function closeModal() {
+  editProfileModal.style.display = 'none';
+}
+
+hideDashboard();
+
+/* =====================
+   AUTH + DATA LOAD
+===================== */
+onAuthStateChanged(auth, async (user) => {
+  if (!user) {
+    window.location.href = 'login.html';
+    return;
+  }
+
+  currentUser = user;
+
+  try {
+    const userRef = ref(db, `users/${user.uid}`);
+    const snapshot = await get(userRef);
+
+    if (snapshot.exists()) {
+      currentUserData = snapshot.val();
+
+      userNameEl.textContent = currentUserData.fullName || 'Student';
+      userEmailEl.textContent = currentUserData.email || user.email;
+
+      // 🔑 ADMIN BUTTON (claim-based)
+      try {
+        const idTokenResult = await user.getIdTokenResult();
+        if (idTokenResult && idTokenResult.claims && idTokenResult.claims.admin === true) {
+          const adminBtn = document.createElement('button');
+          adminBtn.textContent = 'Admin Panel';
+          adminBtn.style.marginLeft = '12px';
+          adminBtn.onclick = () => {
+            window.location.href = 'admin.html';
+          };
+          dashboardContent.appendChild(adminBtn);
+        }
+      } catch (e) {
+        console.warn('Failed to check admin claim', e);
+      }
+
+    } else {
+      currentUserData = { fullName: 'Student', email: user.email };
+      userNameEl.textContent = 'Student';
+      userEmailEl.textContent = user.email;
+    }
+
+    showDashboard();
+
+  } catch (err) {
+    console.error('Failed to load profile:', err);
+
+    currentUserData = { fullName: 'Student', email: user.email };
+    userNameEl.textContent = 'Student';
+    userEmailEl.textContent = user.email || '';
+
+    showDashboard();
+  }
+});
+
+/* =====================
+   PROFILE EDIT LOGIC
+===================== */
+editProfileBtn.addEventListener('click', openEditModal);
+closeEditModal.addEventListener('click', closeModal);
+cancelEditBtn.addEventListener('click', closeModal);
+
+editProfileModal.addEventListener('click', (e) => {
+  if (e.target === editProfileModal) closeModal();
+});
+
+editProfileForm.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  editAlert.style.display = 'none';
+  editAlert.textContent = '';
+
+  const fullName = editNameInput.value.trim();
+  const skills = editSkillsInput.value.trim();
+
+  if (fullName.length < 2) {
+    editAlert.textContent = 'Name must be at least 2 characters.';
+    editAlert.style.display = 'block';
+    return;
+  }
+
+  try {
+    saveProfileBtn.disabled = true;
+
+    const userRef = ref(db, `users/${currentUser.uid}`);
+    await update(userRef, {
+      fullName,
+      skills: skills || null,
+      updatedAt: Date.now()
+    });
+
+    currentUserData.fullName = fullName;
+    currentUserData.skills = skills;
+    userNameEl.textContent = fullName;
+
+    editAlert.textContent = '✓ Profile updated successfully!';
+    editAlert.style.display = 'block';
+    editAlert.style.color = '#22c55e';
+
+    setTimeout(closeModal, 1500);
+
+  } catch (err) {
+    console.error('Error updating profile:', err);
+    editAlert.textContent = err.message;
+    editAlert.style.display = 'block';
+    editAlert.style.color = '#ef4444';
+  } finally {
+    saveProfileBtn.disabled = false;
+  }
+});
+
+/* =====================
+   LOGOUT
+===================== */
+logoutBtn.addEventListener('click', async () => {
+  try {
+    await signOut(auth);
+  } catch (err) {
+    console.error('Sign out error', err);
+  }
+  window.location.href = 'login.html';
+});
+</script>
+
+
+</body>
+</html>

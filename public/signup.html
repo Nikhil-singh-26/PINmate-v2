@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PINmate - Sign Up</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="manifest" href="/manifest.json">
+    <link rel="icon" href="assets/icons/icon-192.png" type="image/x-icon">
+    <link rel="icon" type="image/png" sizes="192x192" href="assets/icons/icon-192.png">
+    <link rel="apple-touch-icon" href="assets/icons/icon-192.png">
+    <meta name="theme-color" content="#6366f1">
+</head>
+<body>
+    <div class="container">
+        <div class="logo">
+          <img src="assets/icons/icon-192.png" alt="PINmate" class="app-icon">
+          <h1>PINmate</h1>
+          <p>Create your account to get started</p>
+        </div>
+
+        <div id="alertBox" class="alert"></div>
+
+        <form id="signupForm">
+            <div class="form-group">
+                <label for="name">Full Name</label>
+                <input type="text" id="name" placeholder="Enter your full name" required>
+                <div class="error-message" id="nameError">Name must be at least 2 characters</div>
+            </div>
+            
+            <div class="form-group">
+                <label for="college">College</label>
+                <select id="college" required>
+                    <option value="">Select your college</option>
+                    <option value="GECB">GECB</option>
+                    <option value="OtherCollege">Other College</option>
+                </select>
+                <div class="error-message" id="collegeError">Please select a college</div>
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email Address</label>
+                <input type="email" id="email" placeholder="Enter your email" required>
+                <div class="error-message" id="emailError">Please enter a valid email address</div>
+                <div class="success-message" id="emailSuccess">✓ Valid email</div>
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" placeholder="Create a strong password" required>
+                <span class="password-toggle" id="togglePassword">👁️</span>
+                <div class="password-strength" id="passwordStrength">
+                    <div class="password-strength-bar" id="passwordStrengthBar"></div>
+                </div>
+                <div class="error-message" id="passwordError">Password must be at least 6 characters</div>
+            </div>
+
+            <div class="form-group">
+                <label for="confirmPassword">Confirm Password</label>
+                <input type="password" id="confirmPassword" placeholder="Re-enter your password" required>
+                <span class="password-toggle" id="toggleConfirmPassword">👁️</span>
+                <div class="error-message" id="confirmPasswordError">Passwords do not match</div>
+                <div class="success-message" id="confirmPasswordSuccess">✓ Passwords match</div>
+            </div>
+
+            <button type="submit" id="signupBtn">
+                Create Account
+                <div class="loader" id="loader"></div>
+            </button>
+        </form>
+
+        <div class="divider">
+            <span>or</span>
+        </div>
+
+        <div class="login-link">
+            Already have an account? <a href="login.html">Login here</a>
+        </div>
+    </div>
+
+<!-- Firebase SDK -->
+<script type="module">
+import { 
+  auth, 
+  db,
+  createUserWithEmailAndPassword,
+  onAuthStateChanged
+} from "./firebase.js";
+import {
+  ref,
+  set
+} from "https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js";
+
+/* =====================
+   DOM ELEMENTS
+===================== */
+const form = document.getElementById("signupForm");
+const nameInput = document.getElementById("name");
+const collegeInput = document.getElementById("college");
+const emailInput = document.getElementById("email");
+const passwordInput = document.getElementById("password");
+const confirmPasswordInput = document.getElementById("confirmPassword");
+const togglePassword = document.getElementById("togglePassword");
+const toggleConfirmPassword = document.getElementById("toggleConfirmPassword");
+const passwordStrengthBar = document.getElementById("passwordStrengthBar");
+const signupBtn = document.getElementById("signupBtn");
+const alertBox = document.getElementById("alertBox");
+
+/* =====================
+   FORM VALIDATION
+===================== */
+
+// Email validation regex
+const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+// Show/hide error messages
+function showError(inputId, show = true) {
+  const errorEl = document.getElementById(inputId + "Error");
+  if (errorEl) errorEl.style.display = show ? 'block' : 'none';
+}
+
+function showSuccess(inputId, show = true) {
+  const successEl = document.getElementById(inputId + "Success");
+  if (successEl) successEl.style.display = show ? 'block' : 'none';
+}
+
+// Password Strength Indicator
+passwordInput.addEventListener("input", (e) => {
+  const password = e.target.value;
+  let strength = 0;
+
+  if (password.length >= 6) strength++;
+  if (/[a-z]/.test(password) && /[A-Z]/.test(password)) strength++;
+  if (/\d/.test(password)) strength++;
+  if (/[^a-zA-Z0-9]/.test(password)) strength++;
+
+  const width = (strength * 25) + '%';
+  const color = 
+    strength === 1 ? '#ef4444' :
+    strength === 2 ? '#f59e0b' :
+    strength === 3 ? '#10b981' : '#00d4ff';
+
+  passwordStrengthBar.style.width = width;
+  passwordStrengthBar.style.backgroundColor = color;
+
+  // Show/hide password error
+  if (password.length >= 6) {
+    showError("password", false);
+  } else {
+    showError("password", true);
+  }
+});
+
+// Password Match Checker
+confirmPasswordInput.addEventListener("input", () => {
+  if (passwordInput.value && confirmPasswordInput.value) {
+    if (passwordInput.value === confirmPasswordInput.value) {
+      showError("confirmPassword", false);
+      showSuccess("confirmPassword", true);
+    } else {
+      showError("confirmPassword", true);
+      showSuccess("confirmPassword", false);
+    }
+  }
+});
+
+// Email Validation
+emailInput.addEventListener("blur", () => {
+  const email = emailInput.value.trim();
+  if (email && emailRegex.test(email)) {
+    showError("email", false);
+    showSuccess("email", true);
+  } else if (email) {
+    showError("email", true);
+    showSuccess("email", false);
+  }
+});
+
+// Password Toggle
+togglePassword.addEventListener("click", () => {
+  if (passwordInput.type === "password") {
+    passwordInput.type = "text";
+    togglePassword.textContent = "🙈";
+  } else {
+    passwordInput.type = "password";
+    togglePassword.textContent = "👁️";
+  }
+});
+
+toggleConfirmPassword.addEventListener("click", () => {
+  if (confirmPasswordInput.type === "password") {
+    confirmPasswordInput.type = "text";
+    toggleConfirmPassword.textContent = "🙈";
+  } else {
+    confirmPasswordInput.type = "password";
+    toggleConfirmPassword.textContent = "👁️";
+  }
+});
+
+// Check if already logged in
+onAuthStateChanged(auth, (user) => {
+  if (user) {
+    window.location.href = 'dashboard.html';
+  }
+});
+
+/* =====================
+   FORM SUBMISSION
+===================== */
+form.addEventListener("submit", async (e) => {
+  e.preventDefault();
+  alertBox.textContent = '';
+  alertBox.style.display = 'none';
+
+  const fullName = nameInput.value.trim();
+  const college = collegeInput.value.trim();
+  const email = emailInput.value.trim();
+  const password = passwordInput.value;
+  const confirmPassword = confirmPasswordInput.value;
+
+  // Validation checks
+  if (fullName.length < 2) {
+    alertBox.textContent = '❌ Name must be at least 2 characters';
+    alertBox.style.display = 'block';
+    return;
+  }
+
+  if (!college) {
+    alertBox.textContent = '❌ Please select a college';
+    alertBox.style.display = 'block';
+    return;
+  }
+
+  if (!emailRegex.test(email)) {
+    alertBox.textContent = '❌ Please enter a valid email address';
+    alertBox.style.display = 'block';
+    return;
+  }
+
+  if (!email.endsWith('@gmail.com')) {
+    alertBox.textContent = '❌ Only Gmail addresses (@gmail.com) are allowed';
+    alertBox.style.display = 'block';
+    return;
+  }
+
+  if (password.length < 6) {
+    alertBox.textContent = '❌ Password must be at least 6 characters';
+    alertBox.style.display = 'block';
+    return;
+  }
+
+  if (password !== confirmPassword) {
+    alertBox.textContent = '❌ Passwords do not match';
+    alertBox.style.display = 'block';
+    return;
+  }
+
+  try {
+    signupBtn.disabled = true;
+
+    // Create user in Firebase Auth
+    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+    const uid = userCredential.user.uid;
+
+    // Create user profile in Realtime Database
+    // NOTE: do NOT set `role` from client-side — roles are server-managed via custom claims
+    await set(ref(db, `users/${uid}`), {
+      fullName,
+      email,
+      college,
+      avatar: "",
+      bio: "",
+      skills: [],
+      createdAt: Date.now(),
+      updatedAt: Date.now(),
+      lastLogin: Date.now()
+    });
+
+    // Send email verification and sign user out to require verification before using the app
+    // Email verification is disabled; users can login immediately after signup
+
+    // Inform user signup was successful
+    alertBox.textContent = '✓ Account created successfully! Redirecting to dashboard...';
+    alertBox.style.display = 'block';
+    alertBox.classList.add('success');
+
+    setTimeout(() => {
+      window.location.href = "dashboard.html";
+    }, 2000);
+
+  } catch (err) {
+    console.error(err);
+    
+    // Handle specific Firebase errors
+    let errorMessage = err.message;
+    if (err.code === 'auth/email-already-in-use') {
+      errorMessage = '❌ Email already in use. Please try another email.';
+    } else if (err.code === 'auth/invalid-email') {
+      errorMessage = '❌ Invalid email format.';
+    } else if (err.code === 'auth/weak-password') {
+      errorMessage = '❌ Password is too weak. Please use at least 6 characters.';
+    }
+
+    alertBox.textContent = errorMessage;
+    alertBox.style.display = 'block';
+    signupBtn.disabled = false;
+  }
+});
+</script>
+
+</body>
+</html>

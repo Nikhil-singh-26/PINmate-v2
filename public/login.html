@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PINmate - Login</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="manifest" href="/manifest.json">
+    <link rel="icon" href="assets/icons/icon-192.png" type="image/x-icon">
+    <link rel="icon" type="image/png" sizes="192x192" href="assets/icons/icon-192.png">
+    <link rel="apple-touch-icon" href="assets/icons/icon-192.png">
+    <meta name="theme-color" content="#6366f1">
+</head>
+<body>
+    <div class="container">
+        <div class="logo">
+          <img src="assets/icons/icon-192.png" alt="PINmate" class="app-icon">
+          <h1>PINmate</h1>
+          <p>Welcome back! Please login to your account</p>
+        </div>
+
+        <div id="alertBox" class="alert"></div>
+
+        <form id="loginForm">
+            <div class="form-group">
+                <label for="email">Email Address</label>
+                <input type="email" id="email" placeholder="Enter your email" required>
+                <div class="error-message" id="emailError">Please enter a valid email address</div>
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" placeholder="Enter your password" required>
+                <span class="password-toggle" id="togglePassword">👁️</span>
+                <div class="error-message" id="passwordError">Password must be at least 6 characters</div>
+            </div>
+
+            <button type="submit" id="loginBtn">
+                Login
+                <div class="loader" id="loader"></div>
+            </button>
+        </form>
+
+        <div style="text-align: center; margin-top: 16px; color: var(--text-secondary); font-size: 14px;">
+            <a href="#" id="forgotPasswordLink">Forgot password?</a>
+        </div>
+
+        <div class="divider">
+            <span>or</span>
+        </div>
+
+        <div class="signup-link">
+            Don't have an account? <a href="signup.html">Sign up now</a>
+        </div>
+    </div>
+
+    <!-- Forgot Password Modal -->
+    <div class="modal" id="forgotPasswordModal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Reset Password</h2>
+                <button class="close-btn" id="closeForgotPasswordModal">&times;</button>
+            </div>
+            <form id="forgotPasswordForm">
+                <div class="form-group">
+                    <label for="resetEmail">Email Address</label>
+                    <input type="email" id="resetEmail" placeholder="Enter your email address" required>
+                    <small>We'll send you a password reset link</small>
+                </div>
+                <div class="modal-actions">
+                    <button type="submit" id="resetPasswordBtn" class="primary-btn">Send Reset Link</button>
+                    <button type="button" id="cancelResetBtn" class="secondary-btn">Cancel</button>
+                </div>
+                <div id="resetAlert" class="alert" style="display: none; margin-top: 10px;"></div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script type="module">
+import { 
+  auth,
+  signInWithEmailAndPassword, 
+  onAuthStateChanged,
+  sendPasswordResetEmail
+} from "./firebase.js";
+const loginForm = document.getElementById('loginForm');
+const emailInput = document.getElementById('email');
+const passwordInput = document.getElementById('password');
+const togglePassword = document.getElementById('togglePassword');
+const loginBtn = document.getElementById('loginBtn');
+const alertBox = document.getElementById('alertBox');
+const forgotPasswordLink = document.getElementById('forgotPasswordLink');
+const forgotPasswordModal = document.getElementById('forgotPasswordModal');
+const closeForgotPasswordModal = document.getElementById('closeForgotPasswordModal');
+const forgotPasswordForm = document.getElementById('forgotPasswordForm');
+const resetEmail = document.getElementById('resetEmail');
+const resetPasswordBtn = document.getElementById('resetPasswordBtn');
+const cancelResetBtn = document.getElementById('cancelResetBtn');
+const resetAlert = document.getElementById('resetAlert');
+
+/* =====================
+   PASSWORD TOGGLE
+===================== */
+if (togglePassword) {
+  togglePassword.addEventListener('click', () => {
+    if (passwordInput.type === 'password') {
+      passwordInput.type = 'text';
+      togglePassword.textContent = '🙈';
+    } else {
+      passwordInput.type = 'password';
+      togglePassword.textContent = '👁️';
+    }
+  });
+}
+
+/* =====================
+   AUTH STATE CHECK
+===================== */
+onAuthStateChanged(auth, (user) => {
+  if (user) {
+    window.location.replace('dashboard.html');
+  }
+});
+
+/* =====================
+   FORGOT PASSWORD MODAL
+===================== */
+forgotPasswordLink.addEventListener('click', (e) => {
+  e.preventDefault();
+  forgotPasswordModal.style.display = 'flex';
+  resetAlert.style.display = 'none';
+  resetEmail.value = '';
+});
+
+closeForgotPasswordModal.addEventListener('click', () => {
+  forgotPasswordModal.style.display = 'none';
+});
+
+cancelResetBtn.addEventListener('click', () => {
+  forgotPasswordModal.style.display = 'none';
+});
+
+// Close modal when clicking outside
+forgotPasswordModal.addEventListener('click', (e) => {
+  if (e.target === forgotPasswordModal) {
+    forgotPasswordModal.style.display = 'none';
+  }
+});
+
+/* =====================
+   PASSWORD RESET HANDLER
+===================== */
+forgotPasswordForm.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  resetAlert.style.display = 'none';
+  resetAlert.textContent = '';
+
+  const email = resetEmail.value.trim();
+
+  if (!email) {
+    resetAlert.textContent = '❌ Please enter your email address';
+    resetAlert.style.display = 'block';
+    return;
+  }
+
+  try {
+    resetPasswordBtn.disabled = true;
+    await sendPasswordResetEmail(auth, email);
+    resetAlert.textContent = '✓ Password reset email sent! Check your inbox.';
+    resetAlert.style.display = 'block';
+    resetAlert.classList.add('success');
+    
+    setTimeout(() => {
+      forgotPasswordModal.style.display = 'none';
+      resetAlert.style.display = 'none';
+    }, 2000);
+  } catch (err) {
+    console.error(err);
+    
+    let errorMessage = err.message;
+    if (err.code === 'auth/user-not-found') {
+      errorMessage = '❌ No account found with this email address.';
+    } else if (err.code === 'auth/invalid-email') {
+      errorMessage = '❌ Invalid email format.';
+    } else if (err.code === 'auth/too-many-requests') {
+      errorMessage = '❌ Too many requests. Please try again later.';
+    }
+    
+    resetAlert.textContent = errorMessage;
+    resetAlert.style.display = 'block';
+    resetPasswordBtn.disabled = false;
+  }
+});
+
+/* =====================
+   LOGIN HANDLER
+===================== */
+loginForm.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  alertBox.textContent = '';
+  alertBox.style.display = 'none';
+  
+  const email = emailInput.value.trim();
+  const password = passwordInput.value;
+
+  // Basic validation
+  if (!email || !password) {
+    alertBox.textContent = '❌ Please enter email and password';
+    alertBox.style.display = 'block';
+    return;
+  }
+
+  try {
+    loginBtn.disabled = true;
+    await signInWithEmailAndPassword(auth, email, password);
+    alertBox.textContent = '✓ Login successful! Redirecting...';
+    alertBox.style.display = 'block';
+    alertBox.classList.add('success');
+    setTimeout(() => {
+      window.location.replace('dashboard.html');
+    }, 1000);
+  } catch (err) {
+    console.error(err);
+    
+    // Handle specific Firebase errors
+    let errorMessage = err.message;
+    if (err.code === 'auth/user-not-found') {
+      errorMessage = '❌ User not found. Please sign up first.';
+    } else if (err.code === 'auth/wrong-password') {
+      errorMessage = '❌ Incorrect password.';
+    } else if (err.code === 'auth/invalid-email') {
+      errorMessage = '❌ Invalid email format.';
+    } else if (err.code === 'auth/too-many-requests') {
+      errorMessage = '❌ Too many failed login attempts. Please try again later.';
+    }
+    
+    alertBox.textContent = errorMessage;
+    alertBox.style.display = 'block';
+    loginBtn.disabled = false;
+  }
+});
+</script>
+
+</body>
+</html>
